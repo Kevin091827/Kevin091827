@@ -62,6 +62,98 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Mysql/sql查询语句小结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/07/12/Mysql/sql查询语句小结/" class="article-date">
+  <time datetime="2019-07-12T09:37:21.693Z" itemprop="datePublished">2019-07-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天在做作业的时候，发现自己sql语句基础并不是特别牢固，所以晚上得时候又重新看了一次查询的sql语法，复习复习基础，个人觉得查询sql语句在增删改查中个人觉得是最重要的，</p>
+<p><strong>分类整理</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20190403012057922.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>下边操作以下列表为主</p>
+<p>student_info表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`student_info`</span> (</span><br><span class="line">  <span class="string">`username`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`sex`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`profession`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`password`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`role`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">164</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<p>userinfo表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`userinfo`</span> (</span><br><span class="line">  <span class="string">`username`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`password`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`perm`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`role`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<p>user_tb表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user_tb`</span> (</span><br><span class="line">  <span class="string">`_userName`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`_id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`_sex`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`_id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">8</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<p><strong>普通查询</strong> </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#基本语法</span></span><br><span class="line"><span class="keyword">select</span> * | filed_need...from table_name </span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student_info</span><br></pre></td></tr></table></figure>
+
+<p><strong>条件查询</strong></p>
+<p>limit – 返回设定数量的记录 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#返回student_info表的前五条记录</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> student_info <span class="keyword">limit</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>offset – 在查询过程中，跳过指定数量的记录，一般和limit一起使用</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#跳过select * from student_info查询结果的前10条记录，返回接下来的5条记录</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> student_info <span class="keyword">limit</span> <span class="number">5</span> <span class="keyword">offset</span> <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<p>除此之外，最经常用到就是where了</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 返回id=1的记录</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> student_info <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#返回id&gt;10且sex性别是男的数据</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> student_info <span class="keyword">where</span> <span class="keyword">id</span>&gt;<span class="number">10</span> <span class="keyword">and</span> sex=<span class="string">'男'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#返回id&gt;10或者sex是男的记录中的id列，sex列和role列</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,sex,<span class="keyword">role</span> <span class="keyword">from</span> student_info <span class="keyword">where</span> <span class="keyword">id</span>&gt;<span class="number">10</span> <span class="keyword">or</span> sex =<span class="string">"男"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#查询id是1,2,3,4,6,7的记录</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> student_info <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">in</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>)</span><br><span class="line"><span class="comment">#查询性别是男或者女的记录</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> student_info <span class="keyword">where</span> sex <span class="keyword">in</span>(<span class="string">'男'</span>,<span class="string">'女'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#查询id在1到10之前的记录</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> student_info <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">between</span> <span class="number">1</span> <span class="keyword">and</span> <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># LIKE :模糊查询 一般和where搭配使用，</span></span><br><span class="line"><span class="comment"># 	通配符：</span></span><br><span class="line"><span class="comment"># 		%：任意字符 eg：%com ：代表以com结尾的任意结果</span></span><br><span class="line"><span class="comment">#					   %com%：代表中间字符为com的任意结果</span></span><br><span class="line"><span class="comment">#					   com%： 代表以com开头的任意结果</span></span><br><span class="line"><span class="comment"># 		_ :单一字符 eg：_1_ :代表三位且中间位是1的任意结果</span></span><br><span class="line"><span class="comment">#					   1__ :代表三位且第一位是1的任意结果</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student_info <span class="keyword">WHERE</span> sex <span class="keyword">LIKE</span> <span class="string">'%11'</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student_info <span class="keyword">WHERE</span> sex <span class="keyword">LIKE</span> <span class="string">'%11%'</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student_info <span class="keyword">WHERE</span> sex <span class="keyword">LIKE</span> <span class="string">'11%'</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student_info <span class="keyword">WHERE</span> sex <span class="keyword">LIKE</span> <span class="string">'_1_'</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student_info <span class="keyword">WHERE</span> sex <span class="keyword">LIKE</span> <span class="string">'1__'</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>where相当于程序语言中的if<ul>
+<li>and：相当于 &amp;&amp;</li>
+<li>or：相当于 ||</li>
+</ul>
+</li>
+</ul>
+<p><strong>= 和 in 的区别？</strong></p>
+<ul>
+<li>后接参数数量<ul>
+<li>=    1个</li>
+<li>in 多个 </li>
+</ul>
+</li>
+<li>in可以后接返回多个结果的一个子查询</li>
+</ul>
+<p><strong>分组 — 可以对重复出现的字段根据他们进行分组</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#根据性别（sex）分组</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student_info <span class="keyword">GROUP</span> <span class="keyword">BY</span> sex</span><br></pre></td></tr></table></figure>
+
+<p><strong>排序</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># DESC 降序</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student_info <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#AES升序</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student_info <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> AES</span><br></pre></td></tr></table></figure>
+
+<p><strong>UNION</strong></p>
+<p>用于连接两个以上的select语句的结果组合到一个结果集合中，默认会删除结果中的重复元素</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ALL连接全部数据，不去除重复值</span></span><br><span class="line"><span class="keyword">SELECT</span> username <span class="keyword">FROM</span> student_info </span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"> <span class="keyword">ALL</span> </span><br><span class="line"><span class="keyword">SELECT</span> username <span class="keyword">FROM</span> userinfo</span><br><span class="line"></span><br><span class="line"><span class="comment">#DISTINCT 连接数据，去除重复值</span></span><br><span class="line"><span class="keyword">SELECT</span> username <span class="keyword">FROM</span> student_info <span class="keyword">WHERE</span> sex <span class="keyword">LIKE</span> <span class="string">'1%'</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">DISTINCT</span> </span><br><span class="line"><span class="keyword">SELECT</span> username <span class="keyword">FROM</span> userinfo</span><br></pre></td></tr></table></figure>
+
+<p><strong>连接查询</strong></p>
+<p><strong>**等值连接</strong>—（内连接）**</p>
+<p>读取两张表中符合的数据，即两张表的交集</p>
+<p><img src="https://img-blog.csdnimg.cn/20190403012844156.png" alt="在这里插入图片描述"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> U.email,I._userName <span class="keyword">FROM</span> <span class="string">`user`</span> U <span class="keyword">INNER</span> <span class="keyword">JOIN</span> <span class="string">`user_tb`</span> I <span class="keyword">ON</span> U.id=I._id</span><br></pre></td></tr></table></figure>
+
+<p><strong>左连接</strong></p>
+<p>读取左边数据表符合的全部数据，即便右边表无对应数据</p>
+<p><img src="https://img-blog.csdnimg.cn/20190403012948577.png" alt="在这里插入图片描述"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> U.email,I._userName <span class="keyword">FROM</span> <span class="string">`user`</span> U <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> <span class="string">`user_tb`</span> I <span class="keyword">ON</span> U.id=I._id</span><br></pre></td></tr></table></figure>
+
+<p><strong>右连接</strong></p>
+<p>读取右边数据表的全部符合的数据，即使左表无对应数据</p>
+<p><img src="https://img-blog.csdnimg.cn/20190403013046625.png" alt="在这里插入图片描述"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> U.email,I._userName <span class="keyword">FROM</span> <span class="string">`user`</span> U <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> <span class="string">`user_tb`</span> I <span class="keyword">ON</span> U.id=I._id</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/07/12/Mysql/sql查询语句小结/" data-id="cjxzwsnia00022wu3dkrd10a5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-java中的加密算法" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/07/12/java中的加密算法/" class="article-date">
@@ -137,43 +229,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/07/12/java中的加密算法/" data-id="cjxzwk69q0002n8u3p8auxj2q" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-java" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/07/12/java/" class="article-date">
-  <time datetime="2019-07-12T09:28:07.000Z" itemprop="datePublished">2019-07-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/12/java/">java</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/07/12/java/" data-id="cjxzwk69h0001n8u3r1tekmjc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/07/12/java中的加密算法/" data-id="cjxzwsnhx00012wu38w8rn8po" class="article-share-link">Share</a>
       
       
     </footer>
@@ -222,7 +278,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/07/12/hello-world/" data-id="cjxzwk69a0000n8u3v1v197e4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/07/12/hello-world/" data-id="cjxzwsnhe00002wu39u96o7ut" class="article-share-link">Share</a>
       
       
     </footer>
@@ -263,11 +319,11 @@
       <ul>
         
           <li>
-            <a href="/2019/07/12/java中的加密算法/">java中的加密算法</a>
+            <a href="/2019/07/12/Mysql/sql查询语句小结/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2019/07/12/java/">java</a>
+            <a href="/2019/07/12/java中的加密算法/">java中的加密算法</a>
           </li>
         
           <li>
