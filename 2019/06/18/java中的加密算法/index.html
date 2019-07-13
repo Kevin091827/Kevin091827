@@ -3,21 +3,22 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>java中的加密算法 | Hexo</title>
+  <title>java中的加密算法 | Kevin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="MinHow,MinHow's Blog">
   
   <meta name="description" content="一，java中的加密算法近期在写项目，很多时候都需要对签名进行加密处理然后在进行比对的操作，因此想总结总结java中比较常用到的一些加密算法 二，分类看了一些博客，我认为，加密算法可以分为以下几种  可逆加密 不可逆加密 对称加密 非对称加密  接下来按照分类依次总结 1.可逆加密什么是可逆加密？可逆加密就是能将需要的明文进行加密，也能对原来加密后的密文进行解密，其中最经典也是比较常用到的就是Ba">
+<meta name="keywords" content="java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java中的加密算法">
-<meta property="og:url" content="http://yoursite.com/2019/07/12/java中的加密算法/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://kevin091827.github.io/2019/06/18/java中的加密算法/index.html">
+<meta property="og:site_name" content="Kevin&#39;s blog">
 <meta property="og:description" content="一，java中的加密算法近期在写项目，很多时候都需要对签名进行加密处理然后在进行比对的操作，因此想总结总结java中比较常用到的一些加密算法 二，分类看了一些博客，我认为，加密算法可以分为以下几种  可逆加密 不可逆加密 对称加密 非对称加密  接下来按照分类依次总结 1.可逆加密什么是可逆加密？可逆加密就是能将需要的明文进行加密，也能对原来加密后的密文进行解密，其中最经典也是比较常用到的就是Ba">
-<meta property="og:locale" content="default">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://img-blog.csdn.net/20180313122446386?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMjA1NDUzNjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="https://img-blog.csdn.net/20180313131013494?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMjA1NDUzNjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:updated_time" content="2019-07-12T09:29:07.398Z">
+<meta property="og:updated_time" content="2019-07-13T04:32:36.069Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java中的加密算法">
 <meta name="twitter:description" content="一，java中的加密算法近期在写项目，很多时候都需要对签名进行加密处理然后在进行比对的操作，因此想总结总结java中比较常用到的一些加密算法 二，分类看了一些博客，我认为，加密算法可以分为以下几种  可逆加密 不可逆加密 对称加密 非对称加密  接下来按照分类依次总结 1.可逆加密什么是可逆加密？可逆加密就是能将需要的明文进行加密，也能对原来加密后的密文进行解密，其中最经典也是比较常用到的就是Ba">
@@ -56,6 +57,16 @@
                     <a  href="/archives">
                         <i class="fa fa-archive"></i>
                         <span>归档</span>
+                    </a>
+                    
+                    <a target="_blank" href="/categories/">
+                        <i class="fa fa-categories"></i>
+                        <span>分类</span>
+                    </a>
+                    
+                    <a target="_blank" href="/tags/">
+                        <i class="fa fa-tags"></i>
+                        <span>标签</span>
                     </a>
                     
                     <a  href="/about">
@@ -115,8 +126,15 @@
     <div class="post-title-bar">
       <ul>
           
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/First/">First</a>
+                  
+              </li>
+          
         <li>
-          <i class="fa fa-calendar"></i>  2019-07-12
+          <i class="fa fa-calendar"></i>  2019-06-18
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -184,12 +202,12 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月12日 17:29</p>
-        <p>原始链接： <a class="post-url" href="/2019/07/12/java中的加密算法/" title="java中的加密算法">http://yoursite.com/2019/07/12/java中的加密算法/</a></p>
+        <p>最后更新： 2019年07月13日 12:32</p>
+        <p>原始链接： <a class="post-url" href="/2019/06/18/java中的加密算法/" title="java中的加密算法">https://kevin091827.github.io/2019/06/18/java中的加密算法/</a></p>
         <footer>
-            <a href="http://yoursite.com">
-                <img src="/images/logo.png" alt="John Doe">
-                John Doe
+            <a href="https://kevin091827.github.io">
+                <img src="/images/logo.png" alt="kevin">
+                kevin
             </a>
         </footer>
     </div>
@@ -242,7 +260,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/07/12/java中的加密算法/&title=《java中的加密算法》 — Hexo&pic=http://yoursite.comimages/logo.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://kevin091827.github.io/2019/06/18/java中的加密算法/&title=《java中的加密算法》 — Kevin's blog&pic=images/timg.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -252,22 +270,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/07/12/java中的加密算法/&title=《java中的加密算法》 — Hexo&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://kevin091827.github.io/2019/06/18/java中的加密算法/&title=《java中的加密算法》 — Kevin's blog&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/07/12/java中的加密算法/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevin091827.github.io/2019/06/18/java中的加密算法/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《java中的加密算法》 — Hexo&url=http://yoursite.com/2019/07/12/java中的加密算法/&via=http://yoursite.com" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《java中的加密算法》 — Kevin's blog&url=https://kevin091827.github.io/2019/06/18/java中的加密算法/&via=https://kevin091827.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/07/12/java中的加密算法/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://kevin091827.github.io/2019/06/18/java中的加密算法/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -277,7 +295,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2019/07/12/java中的加密算法/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://kevin091827.github.io/2019/06/18/java中的加密算法/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -286,6 +304,13 @@
         <ul class="article-footer-menu">
             
             
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/java/" class="color5">java</a>
+      
+  </li>
+
         </ul>
         
     </footer>
@@ -302,11 +327,16 @@
 
 <nav id="article-nav">
   
-  
-    <a href="/2019/07/12/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">Hello World</span>
-      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    <a href="/2019/07/12/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Hello World
+        
+      </span>
     </a>
+  
   
 </nav>
 
@@ -333,7 +363,7 @@
       <p>
         Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
         Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
-      &copy; 2019 John Doe<br>
+      &copy; 2019 kevin<br>
       </p>
     </div>
   </div>
@@ -342,7 +372,7 @@
 <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script>
   var mihoConfig = {
-      root: "http://yoursite.com",
+      root: "https://kevin091827.github.io",
       animate: true,
       isHome: false,
       share: true,
@@ -366,10 +396,10 @@
 <div class="sidebar-menu-box" id="sidebar-menu-box">
     <div class="sidebar-menu-box-container">
         <div id="sidebar-menu-box-categories">
-            
+            <a class="category-link" href="/categories/First/">First</a>
         </div>
         <div id="sidebar-menu-box-tags">
-            
+            <a href="/tags/java/" style="font-size: 10px;">java</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -392,6 +422,18 @@
             </li>
             
             <li>
+                <a target="_blank" href="/categories/">
+                    <i class="fa fa-categories"></i><span>分类</span>
+                </a>
+            </li>
+            
+            <li>
+                <a target="_blank" href="/tags/">
+                    <i class="fa fa-tags"></i><span>标签</span>
+                </a>
+            </li>
+            
+            <li>
                 <a  href="/about">
                     <i class="fa fa-user"></i><span>关于博主</span>
                 </a>
@@ -402,7 +444,7 @@
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            
+            <a href="/tags/java/" style="font-size: 10px;">java</a>
         </div>
     </div>
 </div>
