@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://kevin091827.github.io">
-  <title>Tag: leetcode | Kevin&#39;s blog</title>
+  <title>选择排序 | Kevin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Kevin&#39;s blog">
-<meta property="og:url" content="https://kevin091827.github.io/tags/leetcode/index.html">
+  <meta name="description" content="算法思路第一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，然后再从剩余的未排序元素中寻找到最小（大）元素，然后放到已排序的序列的末尾。以此类推，直到全部待排序的数据元素的个数为零。 算法分析 不稳定排序 时间复杂度；乱序：O(N^2) 空间复杂度：O(1)  算法实现1234567891011121314151617181920212223242526272829303">
+<meta name="keywords" content="排序算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="选择排序">
+<meta property="og:url" content="https://kevin091827.github.io/2019/07/14/选择排序/index.html">
 <meta property="og:site_name" content="Kevin&#39;s blog">
+<meta property="og:description" content="算法思路第一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，然后再从剩余的未排序元素中寻找到最小（大）元素，然后放到已排序的序列的末尾。以此类推，直到全部待排序的数据元素的个数为零。 算法分析 不稳定排序 时间复杂度；乱序：O(N^2) 空间复杂度：O(1)  算法实现1234567891011121314151617181920212223242526272829303">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-14T06:52:42.509Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kevin&#39;s blog">
+<meta name="twitter:title" content="选择排序">
+<meta name="twitter:description" content="算法思路第一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，然后再从剩余的未排序元素中寻找到最小（大）元素，然后放到已排序的序列的末尾。以此类推，直到全部待排序的数据元素的个数为零。 算法分析 不稳定排序 时间复杂度；乱序：O(N^2) 空间复杂度：O(1)  算法实现1234567891011121314151617181920212223242526272829303">
   
     <link rel="alternative" href="/atom.xml" title="Kevin&#39;s blog" type="application/atom+xml">
   
@@ -128,48 +133,87 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-选择排序" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/13/有序数组/" class="archive-article-date">
-  	<time datetime="2019-07-13T14:28:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-13</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/13/有序数组/">两数之和2 - 输入有序数组</a>
+    <h1 class="article-title" itemprop="name">
+      选择排序
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2019/07/14/选择排序/" class="archive-article-date">
+  	<time datetime="2019-07-14T06:51:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h6 id="算法思路"><a href="#算法思路" class="headerlink" title="算法思路"></a>算法思路</h6><p>第一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，然后再从剩余的未排序元素中寻找到最小（大）元素，然后放到已排序的序列的末尾。以此类推，直到全部待排序的数据元素的个数为零。</p>
+<h6 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h6><ol>
+<li>不稳定排序</li>
+<li>时间复杂度；乱序：O(N^2)</li>
+<li>空间复杂度：O(1)</li>
+</ol>
+<h6 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:    排序算法 -- 选择排序</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:         Kevin</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@CreateDate</span>:     2019/7/13 23:35</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@UpdateUser</span>:     Kevin</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@UpdateDate</span>:     2019/7/13 23:35</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@UpdateRemark</span>:   修改内容</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span>: 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SelectSort</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr = &#123; <span class="number">16</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">100</span> &#125;;</span><br><span class="line">        <span class="keyword">int</span>[] b = selectSort(arr);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i : b)&#123;</span><br><span class="line">            System.out.println(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 选择排序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> array</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] selectSort(<span class="keyword">int</span>[] array)&#123;</span><br><span class="line">        <span class="keyword">int</span> length = array.length;</span><br><span class="line">        System.out.println(<span class="string">"length："</span>+length);</span><br><span class="line">        <span class="comment">//找出最小下标</span></span><br><span class="line">        <span class="comment">//外层循环控制比较的趟数 ---&gt; length - 1</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;length-<span class="number">1</span>;i++) &#123;</span><br><span class="line">            <span class="comment">//最小下标</span></span><br><span class="line">            <span class="keyword">int</span> minIndex = i;</span><br><span class="line">            <span class="comment">//内层循环控制每一趟比较的比较次数 ---&gt; length - i</span></span><br><span class="line">            <span class="comment">//自己不用跟自己比，j = i + 1</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i+<span class="number">1</span>;j &lt; length; j++) &#123;</span><br><span class="line">                <span class="comment">//跟最小下标对应数比较</span></span><br><span class="line">                <span class="keyword">if</span> (array[j] &lt; array[minIndex]) &#123;</span><br><span class="line">                    minIndex = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//将找到的最小值和i位置所在的值进行交换</span></span><br><span class="line">            <span class="keyword">if</span> (i != minIndex) &#123;</span><br><span class="line">                <span class="keyword">int</span> tmp = array[i];</span><br><span class="line">                array[i] = array[minIndex];</span><br><span class="line">                array[minIndex] = tmp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> array;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>和冒泡排序不同，这个交换在外层循环的时候进行交换，而不是和冒泡排序一样每次内层循环判断都要交换。</p>
+<p>从这个交换方式可以看出，每次交换是循环开始的元素与选择出来最小或最大的元素交换，也就是说每次交换之后都会把选择出来的元素放到前面排序好元素的后面。</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/alipay_code.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/wechat_code.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">排序算法</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -182,17 +226,104 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://kevin091827.github.io/2019/07/14/选择排序/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2019/07/13/有序数组/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">两数之和2 - 输入有序数组</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -215,9 +346,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
