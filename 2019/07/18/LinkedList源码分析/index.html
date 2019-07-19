@@ -9,7 +9,7 @@
   <title>LinkedList源码分析 | Kevin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="1、linkedList底层数据结构linkedList和ArrayList在底层的实现上有所不同，ArrayList底层实现是数组，linkedList底层实现是双向链表  ##链表介绍##链表是一种物理存储单元上非连续的，非顺序的储存结构，链表由节点和指针构成，节点可以在运行时动态生成 2.源码分析1.节点类我们希望从linkedList中维护的内部类来进一步证实linkedList底层是一个">
-<meta name="keywords" content="源码分析,数据结构和算法">
+<meta name="keywords" content="数据结构和算法,源码分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LinkedList源码分析">
 <meta property="og:url" content="https://kevin091827.github.io/2019/07/18/LinkedList源码分析/index.html">
@@ -17,7 +17,7 @@
 <meta property="og:description" content="1、linkedList底层数据结构linkedList和ArrayList在底层的实现上有所不同，ArrayList底层实现是数组，linkedList底层实现是双向链表  ##链表介绍##链表是一种物理存储单元上非连续的，非顺序的储存结构，链表由节点和指针构成，节点可以在运行时动态生成 2.源码分析1.节点类我们希望从linkedList中维护的内部类来进一步证实linkedList底层是一个">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://images2015.cnblogs.com/blog/616953/201603/616953-20160322214504120-1558870057.png">
-<meta property="og:updated_time" content="2019-07-19T08:52:10.502Z">
+<meta property="og:updated_time" content="2019-07-19T08:53:59.120Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LinkedList源码分析">
 <meta name="twitter:description" content="1、linkedList底层数据结构linkedList和ArrayList在底层的实现上有所不同，ArrayList底层实现是数组，linkedList底层实现是双向链表  ##链表介绍##链表是一种物理存储单元上非连续的，非顺序的储存结构，链表由节点和指针构成，节点可以在运行时动态生成 2.源码分析1.节点类我们希望从linkedList中维护的内部类来进一步证实linkedList底层是一个">
@@ -201,6 +201,9 @@
 
 <p>从尾节点开始找指定元素，并返回器下标,思路同上</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> index = size;</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="keyword">null</span>; x = x.prev) &#123;</span><br><span class="line">            index--;</span><br><span class="line">            <span class="keyword">if</span> (x.item == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> index;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="keyword">null</span>; x = x.prev) &#123;</span><br><span class="line">            index--;</span><br><span class="line">            <span class="keyword">if</span> (o.equals(x.item))</span><br><span class="line">                <span class="keyword">return</span> index;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，其实linkedList在插入删除操作时间复杂度可以达到O(1),但是在查找上时间复杂度是O(N)</p>
+
       
 
       
@@ -244,11 +247,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">源码分析</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">源码分析</a>
         		</li>
       		
 		</ul>
@@ -467,7 +470,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color3">数据结构和算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -475,11 +478,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ArrayList</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数据结构和算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">ArrayList</a>
               </li>
              
               <li class="article-tag-list-item">
