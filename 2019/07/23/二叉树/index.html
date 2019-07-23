@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://kevin091827.github.io">
-  <title>Tag: leetcode | Kevin&#39;s blog</title>
+  <title>二叉树 | Kevin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Kevin&#39;s blog">
-<meta property="og:url" content="https://kevin091827.github.io/tags/leetcode/index.html">
+  <meta name="description" content="一，树的基本知识1.树的递归定义 空结构是一棵空树 如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树 只有经过1,2步骤产生的数据结构才算是树  2.树的基本知识树的分类 树其实总体可以分为两类：  二叉树 多叉树  在二叉树中其实还有很多种  二叉搜索树 二叉线索树 二叉平衡树  我们在本文中先关注最基本的二叉树 二叉树的基本性质 二叉树可以分为">
+<meta name="keywords" content="数据结构和算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树">
+<meta property="og:url" content="https://kevin091827.github.io/2019/07/23/二叉树/index.html">
 <meta property="og:site_name" content="Kevin&#39;s blog">
+<meta property="og:description" content="一，树的基本知识1.树的递归定义 空结构是一棵空树 如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树 只有经过1,2步骤产生的数据结构才算是树  2.树的基本知识树的分类 树其实总体可以分为两类：  二叉树 多叉树  在二叉树中其实还有很多种  二叉搜索树 二叉线索树 二叉平衡树  我们在本文中先关注最基本的二叉树 二叉树的基本性质 二叉树可以分为">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-23T17:26:52.925Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kevin&#39;s blog">
+<meta name="twitter:title" content="二叉树">
+<meta name="twitter:description" content="一，树的基本知识1.树的递归定义 空结构是一棵空树 如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树 只有经过1,2步骤产生的数据结构才算是树  2.树的基本知识树的分类 树其实总体可以分为两类：  二叉树 多叉树  在二叉树中其实还有很多种  二叉搜索树 二叉线索树 二叉平衡树  我们在本文中先关注最基本的二叉树 二叉树的基本性质 二叉树可以分为">
   
     <link rel="alternative" href="/atom.xml" title="Kevin&#39;s blog" type="application/atom+xml">
   
@@ -128,36 +133,139 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-二叉树" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/20/单链表算法/" class="archive-article-date">
-  	<time datetime="2019-07-20T15:26:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-20</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/20/单链表算法/">单链表算法</a>
+    <h1 class="article-title" itemprop="name">
+      二叉树
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2019/07/23/二叉树/" class="archive-article-date">
+  	<time datetime="2019-07-23T15:36:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一，树的基本知识"><a href="#一，树的基本知识" class="headerlink" title="一，树的基本知识"></a>一，树的基本知识</h1><h2 id="1-树的递归定义"><a href="#1-树的递归定义" class="headerlink" title="1.树的递归定义"></a>1.树的递归定义</h2><ul>
+<li>空结构是一棵空树</li>
+<li>如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树</li>
+<li>只有经过1,2步骤产生的数据结构才算是树</li>
+</ul>
+<h2 id="2-树的基本知识"><a href="#2-树的基本知识" class="headerlink" title="2.树的基本知识"></a>2.树的基本知识</h2><p><strong>树的分类</strong></p>
+<p>树其实总体可以分为两类：</p>
+<ul>
+<li>二叉树</li>
+<li>多叉树</li>
+</ul>
+<p>在二叉树中其实还有很多种</p>
+<ul>
+<li>二叉搜索树</li>
+<li>二叉线索树</li>
+<li>二叉平衡树</li>
+</ul>
+<p>我们在本文中先关注最基本的二叉树</p>
+<p><strong>二叉树的基本性质</strong></p>
+<p>二叉树可以分为</p>
+<ul>
+<li>普通的非空二叉树</li>
+<li>完全二叉树</li>
+<li>满二叉树</li>
+</ul>
+<p>层数 = 路径数 + 1 （根的层数是 1 ）</p>
+<p>第 i 层最多节点数 = 2^i </p>
+<p>第 i 层的节点数 ：</p>
+<ul>
+<li>完全二叉树： 2^(i-1)</li>
+<li>满二叉树:   2^i - 1</li>
+</ul>
+<p>高度和深度：</p>
+<p>二叉树的深度是从根节点开始（其深度为1）自顶向下逐层累加的；而二叉树高度是从叶节点开始（其高度为1）自底向上逐层累加的。虽然树的深度和高度一样，但是具体到树的某个节点，其深度和高度是不一样的。</p>
+<h1 id="二，二叉树"><a href="#二，二叉树" class="headerlink" title="二，二叉树"></a>二，二叉树</h1><p>二叉树是节点可以包含两个子节点，也可能两个子节点为空，每一个子节点都可以区分为左子节点和右子节点</p>
+<p>二叉树的一个性质就是一棵平均二叉树的深度要比节点个数N小得多，平均深度为 O（根号N）</p>
+<h2 id="1-二叉树实现"><a href="#1-二叉树实现" class="headerlink" title="1.二叉树实现"></a>1.二叉树实现</h2><p>节点类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:    节点类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:         Kevin</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@CreateDate</span>:     2019/7/24 0:13</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@UpdateUser</span>:     Kevin</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@UpdateDate</span>:     2019/7/24 0:13</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@UpdateRemark</span>:   修改内容</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span>: 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BinaryTreeNode</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//节点值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> element;</span><br><span class="line">    <span class="comment">//左子节点</span></span><br><span class="line">    <span class="keyword">private</span> BinaryTreeNode left;</span><br><span class="line">    <span class="comment">//右子节点</span></span><br><span class="line">    <span class="keyword">private</span> BinaryTreeNode right;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BinaryTreeNode</span><span class="params">(<span class="keyword">int</span> element,BinaryTreeNode left,BinaryTreeNode right)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.element = element;</span><br><span class="line">        <span class="keyword">this</span>.right = right;</span><br><span class="line">        <span class="keyword">this</span>.left = left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BinaryTreeNode</span><span class="params">(<span class="keyword">int</span> element)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.element = element;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getElement</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> element;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setElement</span><span class="params">(<span class="keyword">int</span> element)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.element = element;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> BinaryTreeNode <span class="title">getLeft</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLeft</span><span class="params">(BinaryTreeNode left)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.left = left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> BinaryTreeNode <span class="title">getRight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> right;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRight</span><span class="params">(BinaryTreeNode right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.right = right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现二叉树：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:    二叉树</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:         Kevin</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@CreateDate</span>:     2019/7/24 0:11</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@UpdateUser</span>:     Kevin</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@UpdateDate</span>:     2019/7/24 0:11</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@UpdateRemark</span>:   修改内容</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span>: 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BinaryTree</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根节点</span></span><br><span class="line">    <span class="keyword">private</span> BinaryTreeNode root;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> BinaryTreeNode <span class="title">getRoot</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoot</span><span class="params">(BinaryTreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.root = root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-二叉树的相关算法"><a href="#2-二叉树的相关算法" class="headerlink" title="2.二叉树的相关算法"></a>2.二叉树的相关算法</h2><h3 id="1-遍历"><a href="#1-遍历" class="headerlink" title="1.遍历"></a>1.遍历</h3><p>二叉树的遍历是一个很重要的算法，其递归和非递归实现都需要掌握</p>
+<h4 id="1-深度优先遍历"><a href="#1-深度优先遍历" class="headerlink" title="1.深度优先遍历"></a>1.深度优先遍历</h4><h5 id="1-前序遍历"><a href="#1-前序遍历" class="headerlink" title="1.前序遍历"></a>1.前序遍历</h5><p>递归实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 前序遍历 --- 递归实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preOrder</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        System.out.println(root.getElement());</span><br><span class="line">        preOrder(root.getLeft());</span><br><span class="line">        preOrder(root.getRight());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>非递归实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 前序遍历 --- 非递归实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preOrder2</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    BinaryTreeNode p = root;</span><br><span class="line">    Stack&lt;BinaryTreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    ArrayList&lt;Integer&gt; resultList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span>(p == <span class="keyword">null</span>)&#123;</span><br><span class="line">       <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    stack.push(p);</span><br><span class="line">    <span class="keyword">while</span>(!stack.isEmpty())&#123;</span><br><span class="line">        BinaryTreeNode node = stack.pop();</span><br><span class="line">        <span class="keyword">int</span> element = node.getElement();</span><br><span class="line">        resultList.add(element);</span><br><span class="line">        <span class="keyword">if</span>(node.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(node.getRight());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(node.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(node.getLeft());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i : resultList)&#123;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    BinaryTreeNode root = <span class="keyword">new</span> BinaryTreeNode(<span class="number">15</span>);</span><br><span class="line">    BinaryTreeNode r1 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">4</span>);</span><br><span class="line">    BinaryTreeNode r2 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">1</span>);</span><br><span class="line">    BinaryTreeNode r3 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">20</span>);</span><br><span class="line">    BinaryTreeNode r4 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">16</span>);</span><br><span class="line">    BinaryTreeNode r5 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">25</span>);</span><br><span class="line">    BinaryTree binaryTree = <span class="keyword">new</span> BinaryTree();</span><br><span class="line">    binaryTree.setRoot(root);</span><br><span class="line">    root.setLeft(r1);</span><br><span class="line">    root.setRight(r3);</span><br><span class="line">    r1.setLeft(r2);</span><br><span class="line">    r3.setLeft(r4);</span><br><span class="line">    r3.setRight(r5);</span><br><span class="line">    System.out.println(<span class="string">"********前序遍历递归**********"</span>);</span><br><span class="line">    binaryTree.preOrder(root);</span><br><span class="line">    System.out.println(<span class="string">"********前序遍历非递归**********"</span>);</span><br><span class="line">    binaryTree.preOrder2(root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-中序遍历"><a href="#2-中序遍历" class="headerlink" title="2.中序遍历"></a>2.中序遍历</h5><p>递归实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 中序遍历 --- 递归实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inOrder</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        inOrder(root.getLeft());</span><br><span class="line">        System.out.println(root.getElement());</span><br><span class="line">        inOrder(root.getRight());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>非递归实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 中序遍历 --- 非递归实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inOrder2</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    ArrayList&lt;Integer&gt; resultList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Stack&lt;BinaryTreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    BinaryTreeNode p = root;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="keyword">null</span> || !stack.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">if</span>(p != <span class="keyword">null</span>)&#123;</span><br><span class="line">           stack.push(p);</span><br><span class="line">           p = p.getLeft();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            p = stack.pop();</span><br><span class="line">            resultList.add(p.getElement());</span><br><span class="line">            p = p.getRight();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i : resultList)&#123;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">BinaryTreeNode root = <span class="keyword">new</span> BinaryTreeNode(<span class="number">15</span>);</span><br><span class="line">BinaryTreeNode r1 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">4</span>);</span><br><span class="line">BinaryTreeNode r2 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">1</span>);</span><br><span class="line">BinaryTreeNode r3 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">20</span>);</span><br><span class="line">BinaryTreeNode r4 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">16</span>);</span><br><span class="line">BinaryTreeNode r5 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">25</span>);</span><br><span class="line">BinaryTree binaryTree = <span class="keyword">new</span> BinaryTree();</span><br><span class="line">binaryTree.setRoot(root);</span><br><span class="line">root.setLeft(r1);</span><br><span class="line">root.setRight(r3);</span><br><span class="line">r1.setLeft(r2);</span><br><span class="line">r3.setLeft(r4);</span><br><span class="line">r3.setRight(r5);</span><br><span class="line">System.out.println(<span class="string">"********中序遍历递归**********"</span>);</span><br><span class="line">binaryTree.inOrder(root);</span><br><span class="line">System.out.println(<span class="string">"********中序遍历非递归**********"</span>);</span><br><span class="line">binaryTree.inOrder2(root);</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-后序遍历"><a href="#3-后序遍历" class="headerlink" title="3.后序遍历"></a>3.后序遍历</h5><p>递归实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 后序遍历 --- 递归实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">proOrder</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        proOrder(root.getLeft());</span><br><span class="line">        proOrder(root.getRight());</span><br><span class="line">        System.out.println(root.getElement());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>非递归实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 后序遍历 --- 非递归实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">proOrder2</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    ArrayList&lt;Integer&gt; resultList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    BinaryTreeNode p = root;</span><br><span class="line">    <span class="comment">//操作栈</span></span><br><span class="line">    Stack&lt;BinaryTreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    <span class="comment">//结果栈，用于存放后序遍历的结果</span></span><br><span class="line">    Stack&lt;BinaryTreeNode&gt; resultStack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(p != <span class="keyword">null</span> || !stack.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">if</span>(p != <span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(p);</span><br><span class="line">            resultStack.push(p);</span><br><span class="line">            p = p.getRight();</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            p = stack.pop();</span><br><span class="line">            p = p.getLeft();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(!resultStack.isEmpty())&#123;</span><br><span class="line">        BinaryTreeNode node = resultStack.pop();</span><br><span class="line">        resultList.add(node.getElement());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i : resultList)&#123;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    BinaryTreeNode root = <span class="keyword">new</span> BinaryTreeNode(<span class="number">15</span>);</span><br><span class="line">    BinaryTreeNode r1 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">4</span>);</span><br><span class="line">    BinaryTreeNode r2 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">1</span>);</span><br><span class="line">    BinaryTreeNode r3 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">20</span>);</span><br><span class="line">    BinaryTreeNode r4 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">16</span>);</span><br><span class="line">    BinaryTreeNode r5 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">25</span>);</span><br><span class="line">    BinaryTree binaryTree = <span class="keyword">new</span> BinaryTree();</span><br><span class="line">    binaryTree.setRoot(root);</span><br><span class="line">    root.setLeft(r1);</span><br><span class="line">    root.setRight(r3);</span><br><span class="line">    r1.setLeft(r2);</span><br><span class="line">    r3.setLeft(r4);</span><br><span class="line">    r3.setRight(r5);</span><br><span class="line">    System.out.println(<span class="string">"********后序遍历递归**********"</span>);</span><br><span class="line">    binaryTree.proOrder(root);</span><br><span class="line">    System.out.println(<span class="string">"********后序遍历非递归**********"</span>);</span><br><span class="line">    binaryTree.proOrder2(root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-广度优先遍历"><a href="#2-广度优先遍历" class="headerlink" title="2.广度优先遍历"></a>2.广度优先遍历</h4><h5 id="1-层次遍历"><a href="#1-层次遍历" class="headerlink" title="1.层次遍历"></a>1.层次遍历</h5><p>非递归实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 广度优先遍历</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">breathFirst</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ArrayList&lt;Integer&gt; resultList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Queue&lt;BinaryTreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        queue.add(root);</span><br><span class="line">        <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">            root = queue.remove();</span><br><span class="line">            resultList.add(root.getElement());</span><br><span class="line">            <span class="keyword">if</span>(root.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(root.getLeft());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(root.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(root.getRight());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i : resultList)&#123;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    BinaryTreeNode root = <span class="keyword">new</span> BinaryTreeNode(<span class="number">15</span>);</span><br><span class="line">    BinaryTreeNode r1 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">4</span>);</span><br><span class="line">    BinaryTreeNode r2 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">1</span>);</span><br><span class="line">    BinaryTreeNode r3 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">20</span>);</span><br><span class="line">    BinaryTreeNode r4 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">16</span>);</span><br><span class="line">    BinaryTreeNode r5 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">25</span>);</span><br><span class="line">    BinaryTree binaryTree = <span class="keyword">new</span> BinaryTree();</span><br><span class="line">    binaryTree.setRoot(root);</span><br><span class="line">    root.setLeft(r1);</span><br><span class="line">    root.setRight(r3);</span><br><span class="line">    r1.setLeft(r2);</span><br><span class="line">    r3.setLeft(r4);</span><br><span class="line">    r3.setRight(r5);</span><br><span class="line">    System.out.println(<span class="string">"********层序遍历非递归**********"</span>);</span><br><span class="line">    binaryTree.breathFirst(root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/alipay_code.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/wechat_code.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -165,190 +273,110 @@
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
         		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://kevin091827.github.io/2019/07/23/二叉树/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/16/第三大的数/" class="archive-article-date">
-  	<time datetime="2019-07-16T13:35:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-16</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/07/23/递归/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">递归</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/16/第三大的数/">第三大的数</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/15/找出不重复的数字/" class="archive-article-date">
-  	<time datetime="2019-07-15T15:44:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/15/找出不重复的数字/">找出不重复的数字</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/15/数组-缺失的数字/" class="archive-article-date">
-  	<time datetime="2019-07-15T15:03:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/15/数组-缺失的数字/">数组 -- 缺失的数字</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/13/有序数组/" class="archive-article-date">
-  	<time datetime="2019-07-13T14:28:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-13</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/13/有序数组/">两数之和2 - 输入有序数组</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -371,9 +399,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
