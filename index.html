@@ -224,7 +224,14 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 广度优先遍历</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">breathFirst</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ArrayList&lt;Integer&gt; resultList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Queue&lt;BinaryTreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        queue.add(root);</span><br><span class="line">        <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">            root = queue.remove();</span><br><span class="line">            resultList.add(root.getElement());</span><br><span class="line">            <span class="keyword">if</span>(root.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(root.getLeft());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(root.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(root.getRight());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i : resultList)&#123;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>测试:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    BinaryTreeNode root = <span class="keyword">new</span> BinaryTreeNode(<span class="number">15</span>);</span><br><span class="line">    BinaryTreeNode r1 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">4</span>);</span><br><span class="line">    BinaryTreeNode r2 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">1</span>);</span><br><span class="line">    BinaryTreeNode r3 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">20</span>);</span><br><span class="line">    BinaryTreeNode r4 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">16</span>);</span><br><span class="line">    BinaryTreeNode r5 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">25</span>);</span><br><span class="line">    BinaryTree binaryTree = <span class="keyword">new</span> BinaryTree();</span><br><span class="line">    binaryTree.setRoot(root);</span><br><span class="line">    root.setLeft(r1);</span><br><span class="line">    root.setRight(r3);</span><br><span class="line">    r1.setLeft(r2);</span><br><span class="line">    r3.setLeft(r4);</span><br><span class="line">    r3.setRight(r5);</span><br><span class="line">    System.out.println(<span class="string">"********层序遍历非递归**********"</span>);</span><br><span class="line">    binaryTree.breathFirst(root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    BinaryTreeNode root = <span class="keyword">new</span> BinaryTreeNode(<span class="number">15</span>);</span><br><span class="line">    BinaryTreeNode r1 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">4</span>);</span><br><span class="line">    BinaryTreeNode r2 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">1</span>);</span><br><span class="line">    BinaryTreeNode r3 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">20</span>);</span><br><span class="line">    BinaryTreeNode r4 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">16</span>);</span><br><span class="line">    BinaryTreeNode r5 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">25</span>);</span><br><span class="line">    BinaryTree binaryTree = <span class="keyword">new</span> BinaryTree();</span><br><span class="line">    binaryTree.setRoot(root);</span><br><span class="line">    root.setLeft(r1);</span><br><span class="line">    root.setRight(r3);</span><br><span class="line">    r1.setLeft(r2);</span><br><span class="line">    r3.setLeft(r4);</span><br><span class="line">    r3.setRight(r5);</span><br><span class="line">    System.out.println(<span class="string">"********层序遍历非递归**********"</span>);</span><br><span class="line">      binaryTree.breathFirst(root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>补充：</p>
+<ul>
+<li>先序跟后序遍历不能确定一棵二叉树</li>
+<li>中序遍历和前序遍历可以确定一棵二叉树</li>
+</ul>
+
       
 
       
@@ -387,79 +394,6 @@
 
 
   
-    <article id="post-树基础及二叉树" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/23/树基础及二叉树/">树基础</a>
-    </h1>
-  
-
-        
-        <a href="/2019/07/23/树基础及二叉树/" class="archive-article-date">
-  	<time datetime="2019-07-22T16:50:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一，树的基础知识"><a href="#一，树的基础知识" class="headerlink" title="一，树的基础知识"></a>一，树的基础知识</h2><h3 id="1-树的高度和深度"><a href="#1-树的高度和深度" class="headerlink" title="1.树的高度和深度"></a>1.树的高度和深度</h3><h3 id="2-树的分类"><a href="#2-树的分类" class="headerlink" title="2.树的分类"></a>2.树的分类</h3><h2 id="二，二叉树"><a href="#二，二叉树" class="headerlink" title="二，二叉树"></a>二，二叉树</h2>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/23/树基础及二叉树/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-反转链表详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -517,11 +451,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
         		</li>
       		
 		</ul>
@@ -617,11 +551,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
         		</li>
       		
 		</ul>
@@ -1039,11 +973,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">源码分析</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">源码分析</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -1257,6 +1191,88 @@
 
 
   
+    <article id="post-数组-缺失的数字" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/15/数组-缺失的数字/">数组 -- 缺失的数字</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/15/数组-缺失的数字/" class="archive-article-date">
+  	<time datetime="2019-07-15T15:03:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>给定一个包含 0, 1, 2, …, n 中 n 个数的序列，找出 0 .. n 中没有出现在序列中的那个数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">示例 1:</span><br><span class="line"></span><br><span class="line">输入: [3,0,1]</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">示例 2:</span><br><span class="line"></span><br><span class="line">输入: [9,6,4,2,3,5,7,0,1]</span><br><span class="line">输出: 8</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> 数组;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Auther</span>: Kevin</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>:NumberMissing</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NumberMissing</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &lt;h&gt;</span></span><br><span class="line"><span class="comment">     *     给定一个包含 0, 1, 2, ..., n 中 n 个数的序列，找出 0 .. n 中没有出现在序列中的那个数。</span></span><br><span class="line"><span class="comment">     * &lt;/h&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;li&gt;</span></span><br><span class="line"><span class="comment">     *     示例 1:</span></span><br><span class="line"><span class="comment">     *          输入: [3,0,1]</span></span><br><span class="line"><span class="comment">     *          输出: 2</span></span><br><span class="line"><span class="comment">     * &lt;/li&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;li&gt;</span></span><br><span class="line"><span class="comment">     *     示例 2:</span></span><br><span class="line"><span class="comment">     *          输入: [9,6,4,2,3,5,7,0,1]</span></span><br><span class="line"><span class="comment">     *          输出: 8</span></span><br><span class="line"><span class="comment">     * &lt;/li&gt;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 求缺失数字</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> nums</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">missingNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = nums.length+<span class="number">1</span>;</span><br><span class="line">        System.out.println(<span class="string">"--------&gt; "</span>+n);</span><br><span class="line">        <span class="keyword">return</span> getNTotal(n) - getNumsTotal(nums);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 求数组和</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> nums</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNumsTotal</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> total = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i : nums)&#123;</span><br><span class="line">            total += i;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">"数组和 ---》"</span>+total);</span><br><span class="line">        <span class="keyword">return</span> total;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 前n项和</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> n</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNTotal</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i = ((<span class="number">0</span>+(n-<span class="number">1</span>))*n)/<span class="number">2</span>;</span><br><span class="line">        System.out.println(<span class="string">"前n项和 ----&gt;"</span>+i);</span><br><span class="line">        <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr = &#123; <span class="number">3</span>,<span class="number">0</span>,<span class="number">1</span> &#125;;</span><br><span class="line">        System.out.println(<span class="string">"--------》"</span>+missingNumber(arr));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>思路：</p>
+<p>前n项和 - 数组各项和 = 缺失数字</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/15/数组-缺失的数字/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1367,11 +1383,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数据结构和算法</a>
+                <a href="javascript:void(0)" class="js-tag color3">链表</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">链表</a>
+                <a href="javascript:void(0)" class="js-tag color3">数据结构和算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1383,7 +1399,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1391,11 +1407,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ArrayList</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
+                <a href="javascript:void(0)" class="js-tag color5">ArrayList</a>
               </li>
             
             <div class="clearfix"></div>

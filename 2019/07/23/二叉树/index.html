@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Kevin&#39;s blog">
 <meta property="og:description" content="一，树的基本知识1.树的递归定义 空结构是一棵空树 如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树 只有经过1,2步骤产生的数据结构才算是树  2.树的基本知识树的分类 树其实总体可以分为两类：  二叉树 多叉树  在二叉树中其实还有很多种  二叉搜索树 二叉线索树 二叉平衡树  我们在本文中先关注最基本的二叉树 二叉树的基本性质 二叉树可以分为">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-23T17:26:52.925Z">
+<meta property="og:updated_time" content="2019-07-24T08:12:45.032Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
 <meta name="twitter:description" content="一，树的基本知识1.树的递归定义 空结构是一棵空树 如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树 只有经过1,2步骤产生的数据结构才算是树  2.树的基本知识树的分类 树其实总体可以分为两类：  二叉树 多叉树  在二叉树中其实还有很多种  二叉搜索树 二叉线索树 二叉平衡树  我们在本文中先关注最基本的二叉树 二叉树的基本性质 二叉树可以分为">
@@ -227,7 +227,14 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 广度优先遍历</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">breathFirst</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ArrayList&lt;Integer&gt; resultList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Queue&lt;BinaryTreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        queue.add(root);</span><br><span class="line">        <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">            root = queue.remove();</span><br><span class="line">            resultList.add(root.getElement());</span><br><span class="line">            <span class="keyword">if</span>(root.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(root.getLeft());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(root.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(root.getRight());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i : resultList)&#123;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>测试:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    BinaryTreeNode root = <span class="keyword">new</span> BinaryTreeNode(<span class="number">15</span>);</span><br><span class="line">    BinaryTreeNode r1 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">4</span>);</span><br><span class="line">    BinaryTreeNode r2 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">1</span>);</span><br><span class="line">    BinaryTreeNode r3 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">20</span>);</span><br><span class="line">    BinaryTreeNode r4 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">16</span>);</span><br><span class="line">    BinaryTreeNode r5 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">25</span>);</span><br><span class="line">    BinaryTree binaryTree = <span class="keyword">new</span> BinaryTree();</span><br><span class="line">    binaryTree.setRoot(root);</span><br><span class="line">    root.setLeft(r1);</span><br><span class="line">    root.setRight(r3);</span><br><span class="line">    r1.setLeft(r2);</span><br><span class="line">    r3.setLeft(r4);</span><br><span class="line">    r3.setRight(r5);</span><br><span class="line">    System.out.println(<span class="string">"********层序遍历非递归**********"</span>);</span><br><span class="line">    binaryTree.breathFirst(root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    BinaryTreeNode root = <span class="keyword">new</span> BinaryTreeNode(<span class="number">15</span>);</span><br><span class="line">    BinaryTreeNode r1 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">4</span>);</span><br><span class="line">    BinaryTreeNode r2 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">1</span>);</span><br><span class="line">    BinaryTreeNode r3 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">20</span>);</span><br><span class="line">    BinaryTreeNode r4 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">16</span>);</span><br><span class="line">    BinaryTreeNode r5 = <span class="keyword">new</span> BinaryTreeNode(<span class="number">25</span>);</span><br><span class="line">    BinaryTree binaryTree = <span class="keyword">new</span> BinaryTree();</span><br><span class="line">    binaryTree.setRoot(root);</span><br><span class="line">    root.setLeft(r1);</span><br><span class="line">    root.setRight(r3);</span><br><span class="line">    r1.setLeft(r2);</span><br><span class="line">    r3.setLeft(r4);</span><br><span class="line">    r3.setRight(r5);</span><br><span class="line">    System.out.println(<span class="string">"********层序遍历非递归**********"</span>);</span><br><span class="line">      binaryTree.breathFirst(root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>补充：</p>
+<ul>
+<li>先序跟后序遍历不能确定一棵二叉树</li>
+<li>中序遍历和前序遍历可以确定一棵二叉树</li>
+</ul>
+
       
 
       
@@ -482,11 +489,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数据结构和算法</a>
+                <a href="javascript:void(0)" class="js-tag color3">链表</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">链表</a>
+                <a href="javascript:void(0)" class="js-tag color3">数据结构和算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -498,7 +505,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -506,11 +513,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ArrayList</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
+                <a href="javascript:void(0)" class="js-tag color5">ArrayList</a>
               </li>
             
             <div class="clearfix"></div>
