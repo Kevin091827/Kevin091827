@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Kevin&#39;s blog">
 <meta property="og:description" content="一，树的基本知识1.树的递归定义 空结构是一棵空树 如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树 只有经过1,2步骤产生的数据结构才算是树  2.树的基本知识树的分类 树其实总体可以分为两类：  二叉树 多叉树  在二叉树中其实还有很多种  二叉搜索树 二叉线索树 二叉平衡树  我们在本文中先关注最基本的二叉树 二叉树的基本性质 二叉树可以分为">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-24T08:12:45.032Z">
+<meta property="og:updated_time" content="2019-07-24T14:25:27.407Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
 <meta name="twitter:description" content="一，树的基本知识1.树的递归定义 空结构是一棵空树 如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树 只有经过1,2步骤产生的数据结构才算是树  2.树的基本知识树的分类 树其实总体可以分为两类：  二叉树 多叉树  在二叉树中其实还有很多种  二叉搜索树 二叉线索树 二叉平衡树  我们在本文中先关注最基本的二叉树 二叉树的基本性质 二叉树可以分为">
@@ -233,6 +233,30 @@
 <ul>
 <li>先序跟后序遍历不能确定一棵二叉树</li>
 <li>中序遍历和前序遍历可以确定一棵二叉树</li>
+</ul>
+<h3 id="2-计算二叉树的深度"><a href="#2-计算二叉树的深度" class="headerlink" title="2.计算二叉树的深度"></a>2.计算二叉树的深度</h3><p><strong>二叉树深度：</strong></p>
+<ul>
+<li>空树的深度是 0 </li>
+<li>只有根节点，深度为 0</li>
+<li>根节点只有左子树而没有右子树，二叉树的深度 = 左子树深度 + 1</li>
+<li>根节点只有右子树而没有右子树，二叉树的深度 = 右子树深度 + 1</li>
+<li>根节点又有右子树又有左子树，二叉树深度 = 左右子树深度较大值 + 1</li>
+</ul>
+<p>递归实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;h&gt;计算二叉树深度&lt;/h&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;li&gt;1、一颗树只有一个节点，它的深度是 1&lt;/li&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;li&gt;2、二叉树的根节点只有左子树而没有右子树，二叉树的深度应该是其左子树的深度加 1&lt;/li&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;li&gt;3、二叉树的根节点只有右子树而没有左子树，那么二叉树的深度应该是其右树的深度加 1&lt;/li&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;li&gt;4、二叉树的根节点既有右子树又有左子树，那么二叉树的深度应该是其左右子树的深度较大值加 1&lt;/li&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 【递归实现】</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">depthOfBinaryTree</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Math.max(depthOfBinaryTree(root.getLeft()),depthOfBinaryTree(root.getRight()))+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>非递归实现：其实就是广度优先遍历二叉树，找到最深左子树或者右子树</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;h&gt;计算二叉树深度&lt;/h&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 【非递归实现】</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">depthOfBinaryTree2</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ArrayDeque&lt;BinaryTreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    <span class="keyword">int</span> depth = <span class="number">0</span>;</span><br><span class="line">    queue.add(root);</span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;size;i++)&#123;</span><br><span class="line">            BinaryTreeNode node = queue.removeFirst();</span><br><span class="line">            <span class="keyword">if</span>(node.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(node.getLeft());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(node.getRight());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        depth++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> depth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>二叉树深度的性质</strong></p>
+<ul>
+<li><p>一个深度为 k 的二叉树，最多具有 2^（k-1）个节点</p>
+<ul>
+<li>具有2^k-1个节点的是满二叉树</li>
+</ul>
+</li>
+<li><p>具有n个结点的完全二叉树的深度是【log2n】+1（向下取整）    </p>
+</li>
 </ul>
 
       
@@ -501,15 +525,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">排序算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -518,6 +538,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ArrayList</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">排序算法</a>
               </li>
             
             <div class="clearfix"></div>
