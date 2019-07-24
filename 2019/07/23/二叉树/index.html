@@ -16,10 +16,12 @@
 <meta property="og:site_name" content="Kevin&#39;s blog">
 <meta property="og:description" content="一，树的基本知识1.树的递归定义 空结构是一棵空树 如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树 只有经过1,2步骤产生的数据结构才算是树  2.树的基本知识树的分类 树其实总体可以分为两类：  二叉树 多叉树  在二叉树中其实还有很多种  二叉搜索树 二叉线索树 二叉平衡树  我们在本文中先关注最基本的二叉树 二叉树的基本性质 二叉树可以分为">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-24T14:25:27.407Z">
+<meta property="og:image" content="https://files.jb51.net/file_images/article/201711/20171120113408486.png?20171020113419">
+<meta property="og:updated_time" content="2019-07-24T15:07:27.052Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
 <meta name="twitter:description" content="一，树的基本知识1.树的递归定义 空结构是一棵空树 如果 t1 t2 … tn是不相交的树，那么以t1 t2… tn的根为子节点的数据结构也是一棵树 只有经过1,2步骤产生的数据结构才算是树  2.树的基本知识树的分类 树其实总体可以分为两类：  二叉树 多叉树  在二叉树中其实还有很多种  二叉搜索树 二叉线索树 二叉平衡树  我们在本文中先关注最基本的二叉树 二叉树的基本性质 二叉树可以分为">
+<meta name="twitter:image" content="https://files.jb51.net/file_images/article/201711/20171120113408486.png?20171020113419">
   
     <link rel="alternative" href="/atom.xml" title="Kevin&#39;s blog" type="application/atom+xml">
   
@@ -258,7 +260,10 @@
 <li><p>具有n个结点的完全二叉树的深度是【log2n】+1（向下取整）    </p>
 </li>
 </ul>
+<h3 id="3-计算二叉树的节点个数"><a href="#3-计算二叉树的节点个数" class="headerlink" title="3.计算二叉树的节点个数"></a>3.计算二叉树的节点个数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 计算二叉树的节点数</span></span><br><span class="line"><span class="comment"> * 【递归】</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">nodeNum</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//根节点 + 根左子树的节点数 + 根右子树的节点数</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>+nodeNum(root.getRight())+nodeNum(root.getLeft());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h3 id="4-镜像二叉树"><a href="#4-镜像二叉树" class="headerlink" title="4.镜像二叉树"></a>4.镜像二叉树</h3><p><img src="https://files.jb51.net/file_images/article/201711/20171120113408486.png?20171020113419" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 镜像二叉树</span></span><br><span class="line"><span class="comment"> * 【递归实现】</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mirror</span><span class="params">(BinaryTreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root != <span class="keyword">null</span> &amp;&amp;(root.getLeft() != <span class="keyword">null</span> || root.getRight() != <span class="keyword">null</span>))&#123;</span><br><span class="line">        <span class="comment">//交换左右节点</span></span><br><span class="line">        BinaryTreeNode left = root.getLeft();</span><br><span class="line">        BinaryTreeNode right = root.getRight();</span><br><span class="line">        BinaryTreeNode tmp = root.getLeft();</span><br><span class="line">        left = root.getRight();</span><br><span class="line">        right = tmp;</span><br><span class="line">        <span class="comment">//递归镜像左右子树</span></span><br><span class="line">        mirror(root.getLeft());</span><br><span class="line">        mirror(root.getRight());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
 
       
@@ -529,11 +534,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码分析</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color5">源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
