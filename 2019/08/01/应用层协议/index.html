@@ -19,7 +19,9 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/2019080114381298.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190801144254752.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190801145004558.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2019-08-01T06:52:33.786Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190801151955981.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190801152355766.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:updated_time" content="2019-08-01T07:27:20.451Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="应用层协议">
 <meta name="twitter:description" content="一，应用层规范应用层的具体内容就是精确定义这些通信规定  应用进程交换的报文类型，如请求报文和响应报文 各种报文类型的语法，如报文中的各个字段及其详细描述 字段的语义，即包含在字段中的信息含义 进程何时，如何发送报文，以及对报文进行响应的规则  二，应用层协议1.域名系统DNS简介互联网的命名系统，将人们便于记住的名字转为ip地址，为网络应用提供核心服务 作用将互联网上的主机名字解析为ip地址 补">
@@ -190,7 +192,25 @@
 <p><img src="https://img-blog.csdnimg.cn/20190801145004558.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 <p><strong>补充问题：</strong></p>
 <p>为什么域名解析请求和响应过程都是基于UDP协议？</p>
-<h2 id="2-FTP简单文件传输协议"><a href="#2-FTP简单文件传输协议" class="headerlink" title="2.FTP简单文件传输协议"></a>2.FTP简单文件传输协议</h2>
+<h2 id="2-FTP简单文件传输协议"><a href="#2-FTP简单文件传输协议" class="headerlink" title="2.FTP简单文件传输协议"></a>2.FTP简单文件传输协议</h2><h3 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h3><p>文件传输协议ftp是基于tcp协议的文件传输服务。提供对远程计算机文件的增删改查操作，主要是为了减少或者消除在不同操作系统上处理文件的不兼容性</p>
+<p>这些不兼容性体现在：</p>
+<ul>
+<li>计算机存储数据的格式不同</li>
+<li>文件的目录结构和文件命名的规定不同</li>
+<li>对于相同的文件存取功能，操作系统使用的命令不同</li>
+<li>访问控制的方法不同</li>
+</ul>
+<p>ftp工作流程：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190801151955981.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>数据传输：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190801152355766.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><strong>补充问题：</strong></p>
+<ol>
+<li><p>为什么建立两个独立连接？</p>
+<p> 使协议更加简单，容易实现，同时在传输文件时还可以利用控制连接对文件传输进行控制</p>
+</li>
+</ol>
+
       
 
       
@@ -445,10 +465,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">链表</a>
               </li>
              
@@ -458,6 +474,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
               </li>
              
               <li class="article-tag-list-item">
