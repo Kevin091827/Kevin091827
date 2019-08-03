@@ -157,7 +157,151 @@
 运输层：主机中的进程到另一台主机中的进程间的通信</code></pre><h2 id="2-主要工作"><a href="#2-主要工作" class="headerlink" title="2.主要工作"></a>2.主要工作</h2><ol>
 <li>提供进程间的端到端通信</li>
 <li>对报文进行差错检测</li>
+<li>分用复用</li>
 </ol>
+<h2 id="3-运输层两大协议"><a href="#3-运输层两大协议" class="headerlink" title="3.运输层两大协议"></a>3.运输层两大协议</h2><h3 id="1-udp协议"><a href="#1-udp协议" class="headerlink" title="1.udp协议"></a>1.udp协议</h3><p>udp是面向无连接的的运输层协议，在传输数据之前无需建立连接，接收方接收到udp用户数据报后也无需给发送方发出确认报文，udp提供的是不可靠的交付，但是其优点就是简单，高效</p>
+<p><strong>特点：</strong></p>
+<ol>
+<li><p>udp只是在ip协议的基础上添加了分用复用，差错检测和其他少许功能</p>
+</li>
+<li><p>面向无连接的服务，发送数据前无需建立连接，所以，减少了连接开销和发送之前的时延</p>
+</li>
+<li><p>udp提供不可靠的交付，交付完成后没有确认报文，因此主机无需维持复杂的连接状态表</p>
+</li>
+<li><p>udp是面向报文的协议，udp对接收的报文，既不合并也不拆分，而是保留报文的边界，在添加首部后就交往网络ip层，一次发送一个报文，所以，应用程序必须选择合适大小的报文，如果报文太长，交给ip层后需要对其进行分片发送，降低了ip层的效率，如果报文太短，则首部显得过长，也会降低效率</p>
+</li>
+<li><p>udp没有拥塞控制</p>
+</li>
+<li><p>udp支持一对一，一对多，多对一，多对多的通信</p>
+</li>
+<li><p>udp首部开销小，只有4个字段,源端口，目的端口，udp用户数据报长度，检验和四个字段，8个字节</p>
+</li>
+</ol>
+<p>总体来看,UDP还是比较简单的.它适用于那些无须关心数据是否准确到达的服务, 如视频电话, 局域网游戏等.</p>
+<p><strong>udp的分用和复用</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20190803145153490.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="2-tcp协议"><a href="#2-tcp协议" class="headerlink" title="2.tcp协议"></a>2.tcp协议</h3><blockquote>
+<p>tcp是tcp/ip体系中非常复杂的一个协议</p>
+</blockquote>
+<h4 id="1-特点"><a href="#1-特点" class="headerlink" title="1.特点"></a>1.特点</h4><ul>
+<li><p>tcp是面向连接的运输层协议，在传输数据前需要建立连接，传输完成需要断开连接</p>
+</li>
+<li><p>tcp只提供一对一的通信服务</p>
+</li>
+<li><p>tcp提供可靠交付，通过tcp传输的数据，无差错，不丢失，不重复且按序到达</p>
+</li>
+<li><p>tcp提供全双工通信，双方可以在任何时候发送数据，tcp连接两端设有发送缓存和接收缓存，用来临时存放双向通信的数据，在发送时，应用程序把要发送的数据存入发送缓存就可以做自己的事情，tcp会在适合时间发送出去，接收方把接收到的数据放入接收缓存，应用程序在适合时间读取接收缓存中的数据</p>
+</li>
+<li><p>面向字节流.<br>流是指流入到进程或从进程流出的字节序列.<br>面向字节流的含义是:虽然应用程序和TCP交互的是大小不等的数据块,但TCP把这些数据看成无结构的字节流.TCP只保证发送方发出的字节流和接收方接到的字节流相同.</p>
+</li>
+</ul>
+<h4 id="2-tcp连接管理"><a href="#2-tcp连接管理" class="headerlink" title="2.tcp连接管理"></a>2.tcp连接管理</h4><blockquote>
+<p>tcp的连接管理就是我们平时说的很多的一句话，三次握手，四次挥手</p>
+</blockquote>
+<p>tcp在建立连接过程中要解决的问题：</p>
+<ul>
+<li><p>要是tcp双方能够确知对方的存在</p>
+</li>
+<li><p>要允许tcp双方协商一些参数</p>
+</li>
+<li><p>能够对运输实体资源进行分配</p>
+</li>
+</ul>
+<p><strong>tcp连接过程（三报文握手）</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20190803153718705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>为什么发送方最后还要发送一次确认呢？</p>
+<p>假定这样一种情况，a发出第一个连接请求报文段在发送过程中长时间滞留，a误以为报文段丢失就开启重传机制重传该报文，但是实际上，该报文并没有丢失，还是正确发送给a，这样a就会收到两个确认报文，如果没有最后一步的确认？只要接收方发送确认，就会建立新的连接</p>
+<p><strong>tcp释放连接过程（四报文挥手）</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20190803154631346.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>为何要等待2MSL，客户端才能关闭连接</p>
+<p>保证客户端发出的报文D能够到达服务器。在报文D丢失的情况下，服务器未收到客户端的响应，所以会触发TCP的超时重传，而客户端可以在2MSL时间内收到重传的报文，并对之响应且重新启动2MSL计时器。最终，该连接可以正常关闭。<br>防止失效的连接请求报文出现。可以保证在创建该TCP连接中发出的报文都在网络中消失。</p>
+<h4 id="3-tcp报文格式"><a href="#3-tcp报文格式" class="headerlink" title="3.tcp报文格式"></a>3.tcp报文格式</h4><p><img src="https://user-gold-cdn.xitu.io/2018/1/1/160b0837721690b4?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt></p>
+<p>从上图可以看到, TCP的首部是由固定的20字节加上后面的选项部分(4n字节,n 需要为整数).</p>
+<ul>
+<li><p>目的端口和源端口, 各占2字节.基于端口复用和分用(在上篇提到过这个概念).</p>
+</li>
+<li><p>序号, 占4字节. 范围是[0, 2^32-1].序号达到最大值后, 又回到0从新开始.因为TCP是面向字节流的, 在TCP中传送的每一个字节都按序编号. 整个要传送的字节流的起始序号在连接建立时确定.首部中的该字段指的是本报文段所发送的数据的第一个字节的序号.例如: 一个报文段的序号为301, 而携带数据100字节; 可以确定的是,本报文段数据的第一个字节序号为301, 最后一个字节的序号为400, 下一个报文段的序号应该是401.</p>
+</li>
+<li><p>确认号, 占4字节.表示期望收到对方下一个报文段的数据第一个字节的序号.例如,B正确收到A发过来的一个报文段,其序号值为501,而数据长度是200字节(也就是说该报文段的数据字节序号从501到700).这表明B正确收到了A发送的到序号700为止的数据, 因此B期望收到A的下一个数据的序号是701, 于是B将发给A的确认报文的确认号置为701.请记住,确认号为N,表明序号为N-1的所有数据都以正确收到.</p>
+</li>
+<li><p>数据偏移, 占4bit. 它指出TCP报文段的数据起始处距离TCP报文段的起始处有多远(单位4字节).其实它指出了TCP报文首部的长度是多少.由于TCP报文首部还有不确定的选项部分,该字段的存在是必要的.最大偏移为15 * 4字节=60字节(也确定了TCP首部的最大字节数), 去掉首部固定的20字节, 即选项部分最大为40字节.<br>保留, 占6bit. 暂未使用,目前置为0.</p>
+</li>
+<li><p>紧急URG(URGent), 占1bit. 当URG=1时,表明后面的紧急指针有效.它表明该报文中有紧急数据,需要优先传送.</p>
+</li>
+<li><p>确认ACK(ACKnowledgment), 占1bit.当ACK=1时,确认号字段才有效.</p>
+</li>
+<li><p>推送PSH(Push),占1bit. 当两个应用程序进行交互式通信时, 在一端的应用进程希望在键入一个命令后立即的到对方的响应.这种情况下,TCP可以将PSH置为1,并立即创建一个报文发送出去,接收方在收到PUS=1的报文后,尽快的向上交付.</p>
+</li>
+<li><p>复位RST(ReSet), 占1bit. 当RST=1时,表明TCP连接出现严重错误,必须释放连接,重新建立.还可以使用RST=1来拒绝一个非法的报文段或拒绝打开一个连接.</p>
+</li>
+<li><p>同步SYN(SYNChronization), 占1bit. 在建立连接时使用同步序号.当SYN=1而ACK=0时表明这是一个请求建立连接的报文. 若对方同意建立连接,则响应报文中SYN和ACK都应该是1.可以发现,当SYN=1时说明该报文是用来建立连接的(请求建立连接报文,或同意建立连接报文).</p>
+</li>
+<li><p>终止FIN, 占1bit.用来释放连接,当FIN=1时,表明此报文的发送方数据已经发送完毕,要求释放连接.</p>
+</li>
+<li><p>窗口, 占2字节.值的范围是[0, 2^16-1]之间的整数.指出了接收方目前可以接受数据的大小, 发送方在发送数据时必须考虑到这点.例如,A(作为接收方)发出了一个确认报文,确认号为701(这表明前700个编号数据都正确接收),窗口字段为1000. 这表明A的接收缓存空间还可以接收从编号701到1700的1000字节数据.总之,窗口明确指出了允许发送方发送的数据数量.</p>
+</li>
+<li><p>校验和, 占2字节. 包含首部和数据两部分的校验.这里不对校验的方法做深入讨论.<br>紧急指针, 占2字节.仅在URG=1才有效.它指出紧急数据的字节数量(紧急数据在该报文的数据部分最前方).即使窗口为0,也可以发送紧急数据.<br>选项, 长度可变,最长40字节.</p>
+</li>
+</ul>
+<h4 id="4-tcp可靠传输实现"><a href="#4-tcp可靠传输实现" class="headerlink" title="4.tcp可靠传输实现"></a>4.tcp可靠传输实现</h4><p>tcp可靠传输的实现主要依靠：</p>
+<ul>
+<li>滑动窗口协议</li>
+<li>流量控制</li>
+<li>拥塞控制</li>
+</ul>
+<h5 id="1-滑动窗口协议"><a href="#1-滑动窗口协议" class="headerlink" title="1.滑动窗口协议"></a>1.滑动窗口协议</h5><p>以字节为单位的滑动窗口，接收方和发送方都维护一个窗口，接收方和发送方的窗口大小并不一定保持一样大</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/1/1/160b085bd076c24e?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt></p>
+<p>A的发送窗口的后沿变化情况有两种:</p>
+<ul>
+<li>不动.说明没有收到新的确认.</li>
+<li>向前移动.说明收到了新的确认.</li>
+<li>不可能出现向后移动,若向后移动代表确认过的报文需要再次确认,这是不存在的.</li>
+</ul>
+<p>A的发送窗口的前沿通常不断向前移动,但可能不动:</p>
+<ul>
+<li>未收到新的确认,B通知的窗口大小也未变化.</li>
+<li>收到新的确认,但B的窗口缩小,刚好使A的发送窗口不动.</li>
+</ul>
+<p>上图中，如果a收到了确认好31，则表示30之前的数据都正确到达b，但是如果现在，b收到了序号为32,33的数据，没有收到31，给a发出的确认号只能是31，直到正确接收到31为止</p>
+<p><strong>超时重传时间的选择</strong></p>
+<p>超时重传是保证TCP可靠的重要举措, 这个时间时如何确定的呢?</p>
+<p>TCP采用了自适应的算法: 它会记录一个报文发出去的时间,和接收到相应确认的时间.这两个时间之差就是报文段的往返时间RTT.TCP还会保留RTT的加权平均RTTs.当第一次获取到RTT时,RTTs的值也是这个,以后每次获取到RTT后,就会重新计算</p>
+<p>RTTs:</p>
+<pre><code>新的RTTs = (1-x) *  旧RTTs + x * 新RTT值</code></pre><p>复制代码超时重传时间(RTO, retransmissionTime-Out)应略大于RTTs,具体更详细的计算,这里就不再展开.</p>
+<h5 id="2-基于滑动窗口的流量控制"><a href="#2-基于滑动窗口的流量控制" class="headerlink" title="2.基于滑动窗口的流量控制"></a>2.基于滑动窗口的流量控制</h5><p>流量控制,控制的流量是发送方发出的流量,不至于发的数据太多,接收方来不及接收.TCP基于滑动窗口很容易实现流量控制.借用下图理解下:</p>
+<p><img src="https://img-blog.csdnimg.cn/20190803163236767.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<ul>
+<li><p>在建立连接时,接收方(B),告诉了发送方(A):我的接收窗口是400(单位字节).</p>
+</li>
+<li><p>图中的ACK为TCP首部的ACK字段,ack为首部的确认号字段.</p>
+</li>
+<li><p>流量控制体现在:rwnd=300, rwnd=100, rwnd=0.在确认报文的窗口字段设定了发送方能够发出的数据多少,从而控制流量.注意只有到首部的ACK字段值为1,窗口字段的值才有效.</p>
+</li>
+<li><p>假设在B发送了rwnd=0之后,过段时间由于自己又希望接收到数据,于是发出rwnd=400的报文,但是该报文丢失了,这样A依然无法发送数据,B希望接收但接收不到数据.<br>为解决该问题,TCP为每个链接都设有一个持续计时器.只要接收到对方窗口为0的通知,就启动持续计时器.在计时器到期后,就发送探测报文,对方可以在该报文的确认中告知当前的窗口值.若窗口任然为0,那么就重新设定计时器,若不为0,那么上述的问题就解决了</p>
+</li>
+</ul>
+<h5 id="3-tcp拥塞控制"><a href="#3-tcp拥塞控制" class="headerlink" title="3.tcp拥塞控制"></a>3.tcp拥塞控制</h5><p>实现tcp拥塞控制：</p>
+<ul>
+<li>慢开始</li>
+<li>拥塞避免</li>
+<li>快重传</li>
+<li>快恢复</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20190803163501318.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<ol>
+<li><p>慢开始.当连接建立开始传递数据时,由于不清楚网络状况,先将较小数据发送出去,有小到大的增加发送窗口.比如先发送一个字节数据,等收到确认后再发送2个字节…4个等.每经过一次确认就将发送窗口加倍.</p>
+</li>
+<li><p>图中的ssthresh为慢开始门限,在慢开始的作用下,发送窗口成倍增加,不可能没有上限,这个上限就是慢开始门限.慢开始门限以下使用慢开始控制发送窗口,而在慢开始门限以上使用避免拥塞方法.</p>
+</li>
+<li><p>拥塞避免思路是在经过确认后,每次将发送窗口增加1,而不是像慢开始那样成倍增加.</p>
+</li>
+<li><p>发送窗口还继续增大,直到标注的2,网络出现超时,发送方判断出现了拥塞,将慢开始门限设置为发送窗口值的一半,同时将发送窗口设为1,进入慢开始.</p>
+</li>
+<li><p>当再次到达慢开始门限时(标注3),执行避免拥塞控制,直到标注4.此时出现了对一个报文3次确认的情况(如图中标注3-ACK).</p>
+<p> 在个别报文丢失(而不是网络拥塞),发送方收不到确认,误以为网络拥塞.<br>快重传可以让发送方尽早知道报文丢失.它要求接收方要对收到的数据尽快确认.即使收到了未按序到达的数据,也要对之前确认过的报文再次确认.这样就不会超时,也不会造成发送方误解网络拥塞.<br>上图标注的3-ACK就是连续的3次重复确认.</p>
+</li>
+</ol>
+<pre><code>到标注4后,发送方知道了网络未出现拥塞, 便启用快恢复控制,将门限值调整为发送窗口的一半,发送窗口也减半.开始避免拥塞控制.当然这只是一种快恢复的方法.</code></pre><p><img src="https://user-gold-cdn.xitu.io/2018/1/1/160b0886dddba97e?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt></p>
 
       
 
@@ -920,11 +1064,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
         		</li>
       		
 		</ul>
@@ -1020,11 +1164,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
         		</li>
       		
 		</ul>
@@ -1600,7 +1744,7 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
+                <a href="javascript:void(0)" class="js-tag color3">链表</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1609,10 +1753,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">链表</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1633,6 +1773,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
               </li>
             
             <div class="clearfix"></div>
