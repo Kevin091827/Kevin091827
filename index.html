@@ -130,6 +130,94 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-单值二叉树" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/06/单值二叉树/">单值二叉树</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/06/单值二叉树/" class="archive-article-date">
+  	<time datetime="2019-08-06T14:38:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如果二叉树每个节点都具有相同的值，那么该二叉树就是单值二叉树。</p>
+<p>只有给定的树是单值二叉树时，才返回 true；否则返回 false。</p>
+<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/29/screen-shot-2018-12-25-at-50104-pm.png" alt></p>
+<pre><code>输入：[1,1,1,1,1,null,1]
+输出：true</code></pre><p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/29/screen-shot-2018-12-25-at-50050-pm.png" alt></p>
+<pre><code>输入：[2,2,2,5,2]
+输出：false</code></pre><p>若为单值二叉树，则所有节点的值和根节点的值是一样的，所以，先拿到根节点的值，递归比较左子节点和右子节点        </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Definition for a binary tree node.</span></span><br><span class="line"><span class="comment">// public class TreeNode &#123;</span></span><br><span class="line"><span class="comment">//       int val;</span></span><br><span class="line"><span class="comment">//       TreeNode left;</span></span><br><span class="line"><span class="comment">//       TreeNode right;</span></span><br><span class="line"><span class="comment">//       TreeNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;   </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isUnivalTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> check(root,root.val);</span><br><span class="line">  &#125;</span><br><span class="line">   </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">check</span><span class="params">(TreeNode node,<span class="keyword">int</span> val)</span></span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(node == <span class="keyword">null</span>)&#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span>(val != node.val)&#123;</span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">false</span>; </span><br><span class="line">      &#125; </span><br><span class="line">      <span class="keyword">return</span> check(node.left,val)&amp;&amp;check(node.right,val);</span><br><span class="line">      </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">递归</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/06/单值二叉树/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-java8-stream" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1486,107 +1574,6 @@
 
 
   
-    <article id="post-反转链表详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/21/反转链表详解/">反转链表详解</a>
-    </h1>
-  
-
-        
-        <a href="/2019/07/21/反转链表详解/" class="archive-article-date">
-  	<time datetime="2019-07-21T12:59:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>之前的博客中有做过反转链表这一道题目，在单链表中，反转链表可谓是一道经典的面试或笔试题</p>
-<h3 id="概况"><a href="#概况" class="headerlink" title="概况"></a>概况</h3><p>反转一个单链表。</p>
-<p>示例:</p>
-<p>输入: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL</p>
-<p>输出: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL</p>
-<h3 id="迭代解决"><a href="#迭代解决" class="headerlink" title="迭代解决"></a>迭代解决</h3><h4 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h4><p>原始链表</p>
-<p><img src="https://img-blog.csdnimg.cn/20190721154752163.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>处理第一个节点</p>
-<p><img src="https://img-blog.csdnimg.cn/20190721155034103.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>处理第二个节点</p>
-<p><img src="https://img-blog.csdnimg.cn/20190721155229408.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>依次处理</p>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseNode</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ListNode h = head;</span><br><span class="line">    ListNode newHead = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">while</span>(h != <span class="keyword">null</span>)&#123;</span><br><span class="line">        ListNode tmp = h.next;</span><br><span class="line">        h.next = newHead;</span><br><span class="line">        newHead = h;</span><br><span class="line">        h = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newHead;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="递归解决"><a href="#递归解决" class="headerlink" title="递归解决"></a>递归解决</h3><h4 id="流程-1"><a href="#流程-1" class="headerlink" title="流程"></a>流程</h4><p><img src="https://img-blog.csdnimg.cn/20190721160328474.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<pre><code class="java"><span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseList</span><span class="params">(ListNode head)</span></span>{
-    <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>){
-        <span class="keyword">return</span> <span class="keyword">null</span>;
-    }
-    ListNode newHead = reverseList(head.next);
-    head.next.next = head;
-    head.next = <span class="keyword">null</span>;
-    <span class="keyword">return</span> newHead;
-}</code></pre>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/21/反转链表详解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1714,6 +1701,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
               </li>
              
               <li class="article-tag-list-item">
