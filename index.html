@@ -130,6 +130,168 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-java8-stream" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/06/java8-stream/">java8 stream</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/06/java8-stream/" class="archive-article-date">
+  	<time datetime="2019-08-06T14:05:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一，stream概述"><a href="#一，stream概述" class="headerlink" title="一，stream概述"></a>一，stream概述</h1><p><strong>什么是stream？</strong></p>
+<p>这里的stream不同于IO中的inputStream和OutputStream，stream位于java.util.stream中，是一组支持串行并行聚合操作的元素，也可以理解成集合或者迭代器的增强版</p>
+<p><strong>特征：</strong></p>
+<ul>
+<li><p>单次处理，一次处理结束后，当前stream就关闭了</p>
+</li>
+<li><p>支持并行操作</p>
+</li>
+</ul>
+<h1 id="二，使用"><a href="#二，使用" class="headerlink" title="二，使用"></a>二，使用</h1><ul>
+<li><p><strong>allMatch和anyMatch</strong></p>
+<p>  allMatch：检查 Stream 中的所有元素，全部都通过检测则返回 true，否则 false</p>
+<p>  anyMatch：检查 Stream 中的所有元素，至少有一个通过检测则返回 true，否则 false </p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//allMatch</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().allMatch(n-&gt;n.getClass() == Integer.class));</span><br><span class="line"><span class="comment">//anyMatch</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().anyMatch(n-&gt;n&gt;<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>max，min和sort</strong></p>
+<p>  max：返回stream中的最大值</p>
+<p>  min：返回stream中的最小值</p>
+<p>  sort：对stream中的元素排序</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//遍历</span></span><br><span class="line">list.stream().forEach(a -&gt; System.out.println(a));</span><br><span class="line"><span class="comment">//max</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().max((a,b)-&gt;a-b).get());</span><br><span class="line"><span class="comment">//min</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().min((a,b)-&gt;a-b).get());</span><br><span class="line"><span class="comment">//sort</span></span><br><span class="line">list.stream().sorted((a,b)-&gt;a-b).forEach(a-&gt;System.out.println(a));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>filter和map</strong></p>
+<p>  filter：筛选 Stream 元素，符合条件的留下并组成一个新的 Stream 。</p>
+<p>  map：依次对 Stream 中的元素进行指定的函数操作，并将按顺序将函数操作的返回值组合到一个新的 Stream 中。</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//筛选filter</span></span><br><span class="line">list.stream().filter(n-&gt;n&gt;<span class="number">6</span>).forEach(n-&gt;System.out.println(n));</span><br><span class="line"><span class="comment">//map</span></span><br><span class="line">list.stream().map(n-&gt;n+<span class="number">1</span>).forEach(n-&gt;System.out.println(n));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>distinct和collect</strong></p>
+<p>  distinct：去重</p>
+<p>  collect：可以做collectors中的一些操作，如：连接，转list，分组等</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//collect</span></span><br><span class="line">Stream.of(<span class="string">"1"</span>,<span class="string">"2"</span>,<span class="string">"3"</span>).collect(Collectors.toList()).forEach(n-&gt;System.out.println(n));</span><br><span class="line"><span class="comment">//去重distinct</span></span><br><span class="line">Stream.of(<span class="string">"2"</span>,<span class="string">"2"</span>,<span class="string">"2"</span>).distinct().forEach(n-&gt;System.out.println(n));</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>还有很多详细的用法，没有举出，可以参考：</p>
+<p><a href="https://buzheng.org/post/20160226-java-stream-api-notes/" target="_blank" rel="noopener">stream api</a></p>
+<h1 id="三-Optional类"><a href="#三-Optional类" class="headerlink" title="三,Optional类"></a>三,Optional类</h1><p>Optional类是java8新增的一个类，用以解决程序中常见的NullPointerException异常问题</p>
+<p>NullPointerException是我们很经常遇到的一个问题，大多人遇到这个异常的时候，可能会在出现异常的代码处添加if-else的判断，类似下边代码；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindUserToRole</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">        String roleId = user.getRoleId();</span><br><span class="line">        <span class="keyword">if</span> (roleId != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Role role = roleDao.findOne(roleId);</span><br><span class="line">            <span class="keyword">if</span> (role != <span class="keyword">null</span>) &#123;</span><br><span class="line">                role.setUserId(user.getUserId());</span><br><span class="line">                roleDao.save(role);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，这样手动处理null，如果数据增多，那么，相应的判断也会增多，业务逻辑就会被这大量的if判断淹没，对于代码维护和可读性是很打击的</p>
+<p>在java8推出的Optional类就是用以避免null值引发的种种问题</p>
+<h2 id="1-概况："><a href="#1-概况：" class="headerlink" title="1.概况："></a>1.概况：</h2><p>java.util.Optional<t>类是一个封装了Optional值的容器对象，Optional值可以为null，如果值存在，调用isPresent()方法返回true，调用get()方法可以获取值。</t></p>
+<h2 id="2-创建Optional对象"><a href="#2-创建Optional对象" class="headerlink" title="2.创建Optional对象"></a>2.创建Optional对象</h2><p>Optional类提供类三个方法用于实例化一个Optional对象，它们分别为empty()、of()、ofNullable()，这三个方法都是静态方法，可以直接调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> T value;<span class="comment">//Optional维护的值</span></span><br></pre></td></tr></table></figure>
+
+<p>默认构造：(主要处理null值)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Optional</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.value = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有参构造：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Optional</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.value = Objects.requireNonNull(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>empty()方法用于创建一个没有值的Optional对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Optional&lt;T&gt; <span class="title">empty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    Optional&lt;T&gt; t = (Optional&lt;T&gt;) EMPTY;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>empty()方法创建的对象没有值，如果对emptyOpt变量调用isPresent()方法会返回false，调用get()方法抛出NullPointerException异常。</p>
+<p>of()方法使用一个非空的值创建Optional对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Optional&lt;T&gt; <span class="title">of</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Optional&lt;&gt;(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-接收值"><a href="#3-接收值" class="headerlink" title="3.接收值"></a>3.接收值</h2><p>ofNullable()方法接收一个可以为null的值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;String&gt; nullableOpt = Optional.ofNullable(str);</span><br></pre></td></tr></table></figure>
+
+<p>如果str的值为null，得到的nullableOpt是一个没有值的Optional对象。<br>源码分析：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Optional&lt;T&gt; <span class="title">ofNullable</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//根据值是否为null，调用相应构造方法构造相应Optional对象</span></span><br><span class="line">    <span class="keyword">return</span> value == <span class="keyword">null</span> ? empty() : of(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-获取Optional对象中的值"><a href="#4-获取Optional对象中的值" class="headerlink" title="4.获取Optional对象中的值"></a>4.获取Optional对象中的值</h3><p>如果我们要获取User对象中的roleId属性值，常见的方式是直接获取：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String roleId = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">    roleId = user.getRoleId();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>复制代码使用Optional中提供的map()方法可以以更简单的方式实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;User&gt; userOpt = Optional.ofNullable(user);</span><br><span class="line">Optional&lt;String&gt; roleIdOpt = userOpt.map(User::getRoleId);</span><br></pre></td></tr></table></figure>
+
+<p>Optional类还包含其他方法用于获取值，这些方法分别为：</p>
+<ul>
+<li>orElse()：如果有值就返回，否则返回一个给定的值作为默认值；</li>
+<li>orElseGet()：与orElse()方法作用类似，区别在于生成默认值的方式不同。该方法接受一个Supplier&lt;? extends T&gt;函数式接口参数，用于生成默认值；</li>
+<li>orElseThrow()：与前面介绍的get()方法类似，当值为null时调用这两个方法都会抛出NullPointerException异常，区别在于该方法可以指定抛出的异常类型。</li>
+</ul>
+<h3 id="5-简单应用"><a href="#5-简单应用" class="headerlink" title="5.简单应用"></a>5.简单应用</h3><p><strong>简化if-else</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">User user = ...</span><br><span class="line"><span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">    String userName = user.getUserName();</span><br><span class="line">    <span class="keyword">if</span> (userName != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> userName.toUpperCase();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简化成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">User user = ...</span><br><span class="line">Optional&lt;User&gt; userOpt = Optional.ofNullable(user);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> userOpt.map(User::getUserName)</span><br><span class="line">            .map(String::toUpperCase)</span><br><span class="line">            .orElse(<span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p>注意点：</p>
+<ul>
+<li><p>尽量避免在程序中直接调用Optional对象的get()和isPresent()方法，直接调用get()方法是很危险的做法，如果Optional的值为空，那么毫无疑问会抛出NullPointerException异常，而为了调用get()方法而使用isPresent()方法作为空值检查，这种做法与传统的用if语句块做空值检查没有任何区别。</p>
+</li>
+<li><p>避免使用Optional类型声明实体类属性，Optional没有实现Serializable序列化接口 </p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">java基础</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/06/java8-stream/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-java8新特性-lambda表达式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1425,109 +1587,9 @@
 
 
   
-    <article id="post-单链表-快慢指针" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/21/单链表-快慢指针/">单链表 - 快慢指针</a>
-    </h1>
-  
-
-        
-        <a href="/2019/07/21/单链表-快慢指针/" class="archive-article-date">
-  	<time datetime="2019-07-21T07:05:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在链表这种数据结构中，在处理很多问题的时候，都会用到快慢指针</p>
-<h2 id="一，什么是快慢指针"><a href="#一，什么是快慢指针" class="headerlink" title="一，什么是快慢指针"></a>一，什么是快慢指针</h2><p>快慢指针是指他们两个指针遍历一个链表的速度不一样，快指针比慢指针更快遍历完链表</p>
-<h2 id="二，应用"><a href="#二，应用" class="headerlink" title="二，应用"></a>二，应用</h2><h3 id="1-找中间值"><a href="#1-找中间值" class="headerlink" title="1.找中间值"></a>1.找中间值</h3><p><strong>原理：</strong></p>
-<ul>
-<li>慢指针一次遍历一个节点</li>
-<li>快指针一次遍历两个节点</li>
-<li>快指针是慢指针遍历速度的两倍</li>
-<li>当快指针遍历完所有链表时，慢指针刚好处于中间节点</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">middleNode</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ListNode slow = head;</span><br><span class="line">    ListNode fast = head;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(fast != <span class="keyword">null</span> || fast.next != <span class="keyword">null</span>)&#123;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">        fast = fast.next.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> slow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-判断是否有环"><a href="#2-判断是否有环" class="headerlink" title="2.判断是否有环"></a>2.判断是否有环</h3><p><strong>原理：</strong></p>
-<p>快慢指针存在速度差，若存在环，必相碰</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Boolean <span class="title">hasCycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ListNode slow = head;</span><br><span class="line">    ListNode fast = head;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(fast != <span class="keyword">null</span> || fast.next != <span class="keyword">null</span>)&#123;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">        fast = fast.next.next;</span><br><span class="line">        <span class="keyword">if</span>(fast == slow)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-删除倒数第n个节点"><a href="#3-删除倒数第n个节点" class="headerlink" title="3.删除倒数第n个节点"></a>3.删除倒数第n个节点</h3><p><strong>原理：</strong></p>
-<p>利用快慢指针找到被删除节点的前驱节点</p>
-<p>如何找到第（n-1）个节点（被删除节点的前驱节点）？</p>
-<ul>
-<li>快指针比慢指针快（n+1）个节点，当快节点走完，慢指针刚好在（n-1）个节点上</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">removeNode</span><span class="params">(ListNode head,<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ListNode n = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">    ListNode slow = head;</span><br><span class="line">    ListNode fast = head;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n+<span class="number">1</span>;i++)&#123;</span><br><span class="line">        fast = fast.next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(fast != <span class="keyword">null</span>)&#123;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">        fast = fast.next.next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    slow.next = slow.next.next;</span><br><span class="line">    <span class="keyword">return</span> n.next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">链表</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/21/单链表-快慢指针/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -1635,11 +1697,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">java基础</a>
+                <a href="javascript:void(0)" class="js-tag color3">数据结构和算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数据结构和算法</a>
+                <a href="javascript:void(0)" class="js-tag color2">java基础</a>
               </li>
              
               <li class="article-tag-list-item">
