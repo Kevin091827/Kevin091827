@@ -130,6 +130,116 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-递归" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/23/递归/">递归</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/23/递归/" class="archive-article-date">
+  	<time datetime="2019-07-23T03:04:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="递归原理"><a href="#递归原理" class="headerlink" title="递归原理"></a>递归原理</h2><ul>
+<li><p>宏观：</p>
+<p>  递归是使用运行时栈来实现的，所有的工作都由操作系统来完成</p>
+</li>
+<li><p>微观：</p>
+<ol>
+<li><p>活动记录：</p>
+<pre><code>- 方法参数和局部变量
+- 返回值
+- 返回地址
+- 动态链接（指向调用者活动记录的指针）</code></pre></li>
+<li><p>只要函数在执行，活动记录就会一直存在</p>
+</li>
+<li><p>函数的私有信息池</p>
+</li>
+<li><p>活动记录在函数开始执行时得到动态分配的空间，函数退出时释放空间</p>
+</li>
+<li><p>main函数活动记录存在时间最长</p>
+</li>
+<li><p>每一次执行函数都会产生一份活动记录，会根据执行顺序先后入栈，执行完后出栈</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="递归类型"><a href="#递归类型" class="headerlink" title="递归类型"></a>递归类型</h2><h3 id="1-尾递归"><a href="#1-尾递归" class="headerlink" title="1.尾递归"></a>1.尾递归</h3><p><strong>特点；</strong></p>
+<p>在每个函数实现的末尾只使用一个递归调用，递归调用不仅是最后一条语句，而且在这之前没有直接或间接的递归调用</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 倒序输出一个正整数</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 例如给出正整数 n=12345，希望以各位数的逆序形式输出，即输出54321</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printDigit</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    System.out.println(n % <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">if</span>(n &gt; <span class="number">10</span>)&#123;</span><br><span class="line">        printDigit(n / <span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-非尾递归"><a href="#2-非尾递归" class="headerlink" title="2.非尾递归"></a>2.非尾递归</h3><p><strong>示例：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">reverse</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="keyword">if</span>(ch != <span class="string">'\n'</span>)&#123;</span><br><span class="line">        reverse();</span><br><span class="line">        <span class="built_in">cout</span>.put(ch);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-嵌套递归"><a href="#3-嵌套递归" class="headerlink" title="3.嵌套递归"></a>3.嵌套递归</h3><p>在递归函数中调用递归函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 嵌套递归</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> *  A(n,m) = m + 1                 (n = 0)</span></span><br><span class="line"><span class="comment"> *         = A(n - 1 , 1)          (n &gt; 0 , m = 0)</span></span><br><span class="line"><span class="comment"> *         = A(n - 1 ,A(n,m-1))    else</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">ackermann</span><span class="params">(<span class="keyword">long</span> n , <span class="keyword">long</span> m)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> m+<span class="number">1</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(n &gt; <span class="number">0</span> &amp;&amp; m == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> ackermann(n - <span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ackermann(n-<span class="number">1</span>,ackermann(n,m-<span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-间接递归"><a href="#4-间接递归" class="headerlink" title="4.间接递归"></a>4.间接递归</h3><p>函数f通过调用一系列其他函数来间接调用自身</p>
+<h3 id="5-不合理递归"><a href="#5-不合理递归" class="headerlink" title="5.不合理递归"></a>5.不合理递归</h3><p>使用递归的好处是在逻辑上的简单性和可读性，代价就是降低了运行速度，使用递归方法在运行时栈上存储的内容更多，如果递归调用的次数太多，就会用尽栈空间导致程序崩溃</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/23/递归/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-反转链表详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1103,113 +1213,6 @@
 
 
   
-    <article id="post-有序数组" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/13/有序数组/">两数之和2 - 输入有序数组</a>
-    </h1>
-  
-
-        
-        <a href="/2019/07/13/有序数组/" class="archive-article-date">
-  	<time datetime="2019-07-13T14:28:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>给定一个已按照升序排列 的有序数组，找到两个数使得它们相加之和等于目标数。</p>
-<p>函数应该返回这两个下标值 index1 和 index2，其中 index1 必须小于 index2。</p>
-<p>说明:</p>
-<p>返回的下标值（index1 和 index2）不是从零开始的。</p>
-<p>你可以假设每个输入只对应唯一的答案，而且你不可以重复使用相同的元素。</p>
-<p>示例:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line"></span><br><span class="line">numbers = [2, 7, 11, 15], target = 9</span><br><span class="line"></span><br><span class="line">输出: </span><br><span class="line"></span><br><span class="line">[1,2]</span><br></pre></td></tr></table></figure>
-
-<p>解释: 2 与 7 之和等于目标数 9 。因此 index1 = 1, index2 = 2 。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] twoSum(<span class="keyword">int</span>[] numbers, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        <span class="keyword">int</span> length = numbers.length;</span><br><span class="line">        <span class="comment">// 0&lt;index1&lt;index2&lt;length</span></span><br><span class="line">        <span class="keyword">int</span> index1 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> index2 = length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span>[] result = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">while</span>(index1&lt;index2)&#123;</span><br><span class="line">            <span class="comment">//相加小于目标值，index1右移，对应数值增大</span></span><br><span class="line">            <span class="keyword">if</span>(numbers[index1]+numbers[index2] &lt; target)&#123;</span><br><span class="line">                index1++;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(numbers[index1]+numbers[index2] &gt; target)&#123;</span><br><span class="line">                <span class="comment">//相加大于目标值，index2左移，对应数值减小</span></span><br><span class="line">                index2--;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//根据题目要求</span></span><br><span class="line">                result[<span class="number">0</span>] = index1+<span class="number">1</span>;</span><br><span class="line">                result[<span class="number">1</span>] = index2+<span class="number">1</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>思路：</p>
-<ul>
-<li><p><strong>双指针</strong></p>
-<p>  初始化两个指针，index1指向最小元素（该数组是有序数组），即index1指向数组第一个元素，index2指向最大元素（数组最后一个元素）</p>
-<p>  比较思路：</p>
-<ol>
-<li>当两指针对应的值相加小于目标值，则移动index1指针，增大数值</li>
-<li>当两指针对应的值相加大于目标值，则移动index2指针，减小数值</li>
-<li>当两指针对应的数值相加等于目标值，则是最后结果</li>
-</ol>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/13/有序数组/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1328,15 +1331,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">链表</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">链表</a>
               </li>
              
               <li class="article-tag-list-item">
