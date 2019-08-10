@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    java8 stream |
+    
+    Kevin&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+  <script src="/js/pace.min.js"></script>
+</head>
+</html>
+<body>
+<main class="content">
+  <section class="outer">
+  <article id="post-java8-stream" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      java8 stream
+    </h1>
+  
+  
+
+
+
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2019/08/06/java8-stream/" class="article-date">
+  <time datetime="2019-08-06T14:05:57.000Z" itemprop="datePublished">2019-08-06</time>
+</a>
+        
+      </div>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+      
+
+      
+        <h1 id="一，stream概述"><a href="#一，stream概述" class="headerlink" title="一，stream概述"></a>一，stream概述</h1><p><strong>什么是stream？</strong></p>
+<p>这里的stream不同于IO中的inputStream和OutputStream，stream位于java.util.stream中，是一组支持串行并行聚合操作的元素，也可以理解成集合或者迭代器的增强版</p>
+<p><strong>特征：</strong></p>
+<ul>
+<li><p>单次处理，一次处理结束后，当前stream就关闭了</p>
+</li>
+<li><p>支持并行操作</p>
+</li>
+</ul>
+<h1 id="二，使用"><a href="#二，使用" class="headerlink" title="二，使用"></a>二，使用</h1><ul>
+<li><p><strong>allMatch和anyMatch</strong></p>
+<p>  allMatch：检查 Stream 中的所有元素，全部都通过检测则返回 true，否则 false</p>
+<p>  anyMatch：检查 Stream 中的所有元素，至少有一个通过检测则返回 true，否则 false </p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//allMatch</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().allMatch(n-&gt;n.getClass() == Integer.class));</span><br><span class="line"><span class="comment">//anyMatch</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().anyMatch(n-&gt;n&gt;<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>max，min和sort</strong></p>
+<p>  max：返回stream中的最大值</p>
+<p>  min：返回stream中的最小值</p>
+<p>  sort：对stream中的元素排序</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//遍历</span></span><br><span class="line">list.stream().forEach(a -&gt; System.out.println(a));</span><br><span class="line"><span class="comment">//max</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().max((a,b)-&gt;a-b).get());</span><br><span class="line"><span class="comment">//min</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().min((a,b)-&gt;a-b).get());</span><br><span class="line"><span class="comment">//sort</span></span><br><span class="line">list.stream().sorted((a,b)-&gt;a-b).forEach(a-&gt;System.out.println(a));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>filter和map</strong></p>
+<p>  filter：筛选 Stream 元素，符合条件的留下并组成一个新的 Stream 。</p>
+<p>  map：依次对 Stream 中的元素进行指定的函数操作，并将按顺序将函数操作的返回值组合到一个新的 Stream 中。</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//筛选filter</span></span><br><span class="line">list.stream().filter(n-&gt;n&gt;<span class="number">6</span>).forEach(n-&gt;System.out.println(n));</span><br><span class="line"><span class="comment">//map</span></span><br><span class="line">list.stream().map(n-&gt;n+<span class="number">1</span>).forEach(n-&gt;System.out.println(n));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>distinct和collect</strong></p>
+<p>  distinct：去重</p>
+<p>  collect：可以做collectors中的一些操作，如：连接，转list，分组等</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//collect</span></span><br><span class="line">Stream.of(<span class="string">"1"</span>,<span class="string">"2"</span>,<span class="string">"3"</span>).collect(Collectors.toList()).forEach(n-&gt;System.out.println(n));</span><br><span class="line"><span class="comment">//去重distinct</span></span><br><span class="line">Stream.of(<span class="string">"2"</span>,<span class="string">"2"</span>,<span class="string">"2"</span>).distinct().forEach(n-&gt;System.out.println(n));</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>还有很多详细的用法，没有举出，可以参考：</p>
+<p><a href="https://buzheng.org/post/20160226-java-stream-api-notes/" target="_blank" rel="noopener">stream api</a></p>
+<h1 id="三-Optional类"><a href="#三-Optional类" class="headerlink" title="三,Optional类"></a>三,Optional类</h1><p>Optional类是java8新增的一个类，用以解决程序中常见的NullPointerException异常问题</p>
+<p>NullPointerException是我们很经常遇到的一个问题，大多人遇到这个异常的时候，可能会在出现异常的代码处添加if-else的判断，类似下边代码；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindUserToRole</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">        String roleId = user.getRoleId();</span><br><span class="line">        <span class="keyword">if</span> (roleId != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Role role = roleDao.findOne(roleId);</span><br><span class="line">            <span class="keyword">if</span> (role != <span class="keyword">null</span>) &#123;</span><br><span class="line">                role.setUserId(user.getUserId());</span><br><span class="line">                roleDao.save(role);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，这样手动处理null，如果数据增多，那么，相应的判断也会增多，业务逻辑就会被这大量的if判断淹没，对于代码维护和可读性是很打击的</p>
+<p>在java8推出的Optional类就是用以避免null值引发的种种问题</p>
+<h2 id="1-概况："><a href="#1-概况：" class="headerlink" title="1.概况："></a>1.概况：</h2><p>java.util.Optional<t>类是一个封装了Optional值的容器对象，Optional值可以为null，如果值存在，调用isPresent()方法返回true，调用get()方法可以获取值。</t></p>
+<h2 id="2-创建Optional对象"><a href="#2-创建Optional对象" class="headerlink" title="2.创建Optional对象"></a>2.创建Optional对象</h2><p>Optional类提供类三个方法用于实例化一个Optional对象，它们分别为empty()、of()、ofNullable()，这三个方法都是静态方法，可以直接调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> T value;<span class="comment">//Optional维护的值</span></span><br></pre></td></tr></table></figure>
+
+<p>默认构造：(主要处理null值)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Optional</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.value = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有参构造：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Optional</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.value = Objects.requireNonNull(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>empty()方法用于创建一个没有值的Optional对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Optional&lt;T&gt; <span class="title">empty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    Optional&lt;T&gt; t = (Optional&lt;T&gt;) EMPTY;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>empty()方法创建的对象没有值，如果对emptyOpt变量调用isPresent()方法会返回false，调用get()方法抛出NullPointerException异常。</p>
+<p>of()方法使用一个非空的值创建Optional对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Optional&lt;T&gt; <span class="title">of</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Optional&lt;&gt;(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-接收值"><a href="#3-接收值" class="headerlink" title="3.接收值"></a>3.接收值</h2><p>ofNullable()方法接收一个可以为null的值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;String&gt; nullableOpt = Optional.ofNullable(str);</span><br></pre></td></tr></table></figure>
+
+<p>如果str的值为null，得到的nullableOpt是一个没有值的Optional对象。<br>源码分析：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Optional&lt;T&gt; <span class="title">ofNullable</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//根据值是否为null，调用相应构造方法构造相应Optional对象</span></span><br><span class="line">    <span class="keyword">return</span> value == <span class="keyword">null</span> ? empty() : of(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-获取Optional对象中的值"><a href="#4-获取Optional对象中的值" class="headerlink" title="4.获取Optional对象中的值"></a>4.获取Optional对象中的值</h3><p>如果我们要获取User对象中的roleId属性值，常见的方式是直接获取：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String roleId = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">    roleId = user.getRoleId();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>复制代码使用Optional中提供的map()方法可以以更简单的方式实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;User&gt; userOpt = Optional.ofNullable(user);</span><br><span class="line">Optional&lt;String&gt; roleIdOpt = userOpt.map(User::getRoleId);</span><br></pre></td></tr></table></figure>
+
+<p>Optional类还包含其他方法用于获取值，这些方法分别为：</p>
+<ul>
+<li>orElse()：如果有值就返回，否则返回一个给定的值作为默认值；</li>
+<li>orElseGet()：与orElse()方法作用类似，区别在于生成默认值的方式不同。该方法接受一个Supplier&lt;? extends T&gt;函数式接口参数，用于生成默认值；</li>
+<li>orElseThrow()：与前面介绍的get()方法类似，当值为null时调用这两个方法都会抛出NullPointerException异常，区别在于该方法可以指定抛出的异常类型。</li>
+</ul>
+<h3 id="5-简单应用"><a href="#5-简单应用" class="headerlink" title="5.简单应用"></a>5.简单应用</h3><p><strong>简化if-else</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">User user = ...</span><br><span class="line"><span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">    String userName = user.getUserName();</span><br><span class="line">    <span class="keyword">if</span> (userName != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> userName.toUpperCase();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简化成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">User user = ...</span><br><span class="line">Optional&lt;User&gt; userOpt = Optional.ofNullable(user);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> userOpt.map(User::getUserName)</span><br><span class="line">            .map(String::toUpperCase)</span><br><span class="line">            .orElse(<span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p>注意点：</p>
+<ul>
+<li><p>尽量避免在程序中直接调用Optional对象的get()和isPresent()方法，直接调用get()方法是很危险的做法，如果Optional的值为空，那么毫无疑问会抛出NullPointerException异常，而为了调用get()方法而使用isPresent()方法作为空值检查，这种做法与传统的用if语句块做空值检查没有任何区别。</p>
+</li>
+<li><p>避免使用Optional类型声明实体类属性，Optional没有实现Serializable序列化接口 </p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://kevin091827.github.io/2019/08/06/java8-stream/" data-id="cjz54ryeo0002kwu3qrubnr9h"
+         class="article-share-link">Share</a>
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+      <a href="/2019/08/06/单值二叉树/" class="article-nav-link">
+        <strong class="article-nav-caption">Newer posts</strong>
+        <div class="article-nav-title">
+          
+            单值二叉树
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/08/06/java8新特性-lambda表达式/" class="article-nav-link">
+        <strong class="article-nav-caption">Olde posts</strong>
+        <div class="article-nav-title">java8新特性 lambda表达式</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+    <li><i class="fe fe-bookmark"></i> <span id="busuanzi_value_page_pv"></span></li>
+  
+</ul>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2019 Kevin&#39;s blog</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+<aside class="sidebar">
+  <button class="navbar-toggle"></button>
+
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/hexo.svg" alt="Kevin&#39;s blog"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+</aside>
+<script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<script src="/js/snap.svg-min.js"></script>
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+  <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>
