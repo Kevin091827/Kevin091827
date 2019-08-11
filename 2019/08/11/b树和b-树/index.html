@@ -6,15 +6,30 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://kevin091827.github.io">
-  <title>Tag: 排序算法 | Kevin&#39;s blog</title>
+  <title>b树和b+树 | Kevin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Kevin&#39;s blog">
-<meta property="og:url" content="https://kevin091827.github.io/tags/排序算法/index.html">
+  <meta name="description" content="多叉树简述b树b树是最普通的一类多叉树，一个m阶的b树具有如下几个特征：  b树中所有节点的的子节点数的最大值称为b树的阶 一个节点有k个孩子，那么必有k-1个关键字才能将子节点划分为k个子集 根结点至少有两个子女。 每个中间节点都包含k-1个元素和k个孩子，其中 ceil（m/2） ≤ k ≤ m 每一个叶子节点都包含k-1个元素，其中 ceil（m/2） ≤ k ≤ m 所有的叶子结点都位于同">
+<meta name="keywords" content="数据结构和算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="b树和b+树">
+<meta property="og:url" content="https://kevin091827.github.io/2019/08/11/b树和b-树/index.html">
 <meta property="og:site_name" content="Kevin&#39;s blog">
+<meta property="og:description" content="多叉树简述b树b树是最普通的一类多叉树，一个m阶的b树具有如下几个特征：  b树中所有节点的的子节点数的最大值称为b树的阶 一个节点有k个孩子，那么必有k-1个关键字才能将子节点划分为k个子集 根结点至少有两个子女。 每个中间节点都包含k-1个元素和k个孩子，其中 ceil（m/2） ≤ k ≤ m 每一个叶子节点都包含k-1个元素，其中 ceil（m/2） ≤ k ≤ m 所有的叶子结点都位于同">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdn.net/2018032420113990?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190811112208920.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180324225635106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180324230149255?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180324232514619?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180324232544302?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180325001555181?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180325111523599?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180325111559207?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:updated_time" content="2019-08-11T03:46:51.211Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kevin&#39;s blog">
+<meta name="twitter:title" content="b树和b+树">
+<meta name="twitter:description" content="多叉树简述b树b树是最普通的一类多叉树，一个m阶的b树具有如下几个特征：  b树中所有节点的的子节点数的最大值称为b树的阶 一个节点有k个孩子，那么必有k-1个关键字才能将子节点划分为k个子集 根结点至少有两个子女。 每个中间节点都包含k-1个元素和k个孩子，其中 ceil（m/2） ≤ k ≤ m 每一个叶子节点都包含k-1个元素，其中 ceil（m/2） ≤ k ≤ m 所有的叶子结点都位于同">
+<meta name="twitter:image" content="https://img-blog.csdn.net/2018032420113990?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
   
     <link rel="alternative" href="/atom.xml" title="Kevin&#39;s blog" type="application/atom+xml">
   
@@ -128,71 +143,243 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-b树和b-树" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/14/选择排序/" class="archive-article-date">
-  	<time datetime="2019-07-14T06:51:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-14</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/14/选择排序/">选择排序</a>
+    <h1 class="article-title" itemprop="name">
+      b树和b+树
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2019/08/11/b树和b-树/" class="archive-article-date">
+  	<time datetime="2019-08-11T03:46:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="多叉树简述"><a href="#多叉树简述" class="headerlink" title="多叉树简述"></a>多叉树简述</h4><h5 id="b树"><a href="#b树" class="headerlink" title="b树"></a>b树</h5><p>b树是最普通的一类多叉树，一个m阶的b树具有如下几个特征：</p>
+<ul>
+<li>b树中所有节点的的子节点数的最大值称为b树的阶</li>
+<li>一个节点有k个孩子，那么必有k-1个关键字才能将子节点划分为k个子集</li>
+<li>根结点至少有两个子女。</li>
+<li>每个中间节点都包含k-1个元素和k个孩子，其中 ceil（m/2） ≤ k ≤ m</li>
+<li>每一个叶子节点都包含k-1个元素，其中 ceil（m/2） ≤ k ≤ m</li>
+<li>所有的叶子结点都位于同一层。</li>
+<li>每个节点中的元素从小到大排列，节点当中k-1个元素正好是k个孩子包含的元素的值域划分</li>
+<li>每个结点的结构为：（n，A0，K1，A1，K2，A2，…  ，Kn，An）<br>  其中，Ki(1≤i≤n)为关键字，且Ki&lt;Ki+1(1≤i≤n-1)。<br>Ai(0≤i≤n)为指向子树根结点的指针。且Ai所指子树所有结点中的关键字均小于Ki+1。<br>n为结点中关键字的个数，满足ceil(m/2)-1≤n≤m-1。</li>
+</ul>
+<p>例如：</p>
+<p>三阶b树:最大子节点数量为3,节点关键字为2个</p>
+<p><img src="https://img-blog.csdn.net/2018032420113990?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p><strong>查询操作</strong></p>
+<p>　　以上图为例：若查询的数值为５： </p>
+<p>　　第一次磁盘ＩＯ：在内存中定位（与17、35比较），比17小，左子树； </p>
+<p>　　第二次磁盘ＩＯ：在内存中定位（与８、12比较），比８小，左子树； </p>
+<p>　　第三次磁盘ＩＯ：在内存中定位（与3、5比较），找到5，终止。 </p>
+<p><img src="https://img-blog.csdnimg.cn/20190811112208920.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>整个过程中，我们可以看出：比较的次数并不比二叉查找树少，尤其适当某一节点中的数据很多时，但是磁盘IO的次数却是大大减少。比较是在内存中进行的，相比于磁盘IO的速度，比较的耗时几乎可以忽略。所以当树的高度足够低的话，就可以极大的提高效率。相比之下，节点中的元素多点也没关系，仅仅是多了几次内存交互而已，只要不超过磁盘页的大小即可。现在重点关注的就是磁盘IO的次数</p>
+<p><strong>插入操作</strong></p>
+<p>若被插入节点的关键字个数 &lt; m-1 ，则直接插入</p>
+<p>若被插入节点的关键字个数等于m-1，则会引起该节点分裂，将节点中间值插入到该节点的父节点</p>
+<p>重复上述工作，最坏情况一直分裂到根结点，建立一个新的根结点，整个B树增加一层。</p>
+<p>eg：插入4</p>
+<p><img src="https://img-blog.csdn.net/20180324225635106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p>会引起节点分裂，将中间值4提到父节点,若扔引起分裂，重复操作</p>
+<p><img src="https://img-blog.csdn.net/20180324230149255?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p>之所以要分裂，其实就是维护多叉树平衡的一个性质，相当于平衡树中的旋转</p>
+<p><strong>删除操作</strong><br>Ｂ树中关键字的删除比插入更复杂，在这里说下跟b树插入节点类似的一种删除方法:</p>
+<p>eg:删除11</p>
+<p><img src="https://img-blog.csdn.net/20180324232514619?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p>但是删除后12只有右子节点了，需要判断其左右兄弟结点中有“多余”的关键字，即：原关键字个数n&gt;=ceil(m/2) - 1</p>
+<p>右子节点分裂</p>
+<p><img src="https://img-blog.csdn.net/20180324232544302?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p><strong>补充：</strong></p>
+<ul>
+<li>B树主要用于文件系统以及部分数据库索引，例如： MongoDB。而大部分关系数据库则使用B+树做索引，例如：mysql数据库； </li>
+<li>从查找效率考虑一般要求B树的阶数m &gt;= 3; </li>
+<li>B-树上算法的执行时间主要由读、写磁盘的次数来决定，故一次I/O操作应读写尽可能多的信息。因此B-树的结点规模一般以一个磁盘页为单位。一个结点包含的关键字及其孩子个数取决于磁盘页的大小。</li>
+</ul>
+<h5 id="b-树"><a href="#b-树" class="headerlink" title="b+树"></a>b+树</h5><p>Ｂ＋树是Ｂ树的变种，有着比Ｂ树更高的查询效率</p>
+<p>特征：</p>
+<ol>
+<li><p>有k个子树的中间节点包含有k个元素（B树中是k-1个元素），每个元素不保存数据，只用来索引，所有数据<br>都保存在叶子节点。</p>
+</li>
+<li><p>所有的叶子结点中包含了全部元素的信息，及指向含这些元素记录的指针，且叶子结点本身依关键字的大小<br>自小而大顺序链接。</p>
+</li>
+<li><p>所有的中间节点元素都同时存在于子节点，在子节点元素中是最大（或最小）元素。</p>
+</li>
+</ol>
+<p>eg：三阶b+树</p>
+<p><img src="https://img-blog.csdn.net/20180325001555181?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p><strong>查找</strong></p>
+<p>B+树通常有两个指针，一个指向根结点，另一个指向关键字最小的叶子结点。因些，对于B+树进行查找两种运算：一种是从最小关键字起顺序查找，另一种是从根结点开始，进行随机查找。</p>
+<p>B+树相比B树的优势：</p>
+<ol>
+<li>b+树中间节点存储的是数据在叶节点的索引，可以包含的关键字更多,单一节点存储更多的元素，使得查询的IO次数更少； </li>
+<li>所有查询都要查找到叶子节点，查询性能稳定； </li>
+<li>所有叶子节点形成有序链表，便于范围查询。</li>
+</ol>
+<p>eg:范围查询</p>
+<p>b树范围查询：</p>
+<p><img src="https://img-blog.csdn.net/20180325111523599?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p>b+树：</p>
+<p><img src="https://img-blog.csdn.net/20180325111559207?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/alipay_code.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/wechat_code.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">排序算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
+      
 
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://kevin091827.github.io/2019/08/11/b树和b-树/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2019/08/08/从mysql索引谈b树和b+树/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">从mysql索引谈b树和b+树</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -215,9 +402,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
