@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190809210820897.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190809211253940.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190809211347423.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2019-08-09T13:29:04.491Z">
+<meta property="og:updated_time" content="2019-08-11T02:30:49.591Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从mysql索引谈b树和b+树">
 <meta name="twitter:description" content="一，mysql索引mysql对索引的定义就是：索引是帮助高效获取数据的数据结构， 1.mysql中索引的使用mysql索引类型普通索引  其实就是普通的键，能加快查询速度   唯一索引  加快查询，但是索引列值必须唯一，可以为null  主键索引  唯一索引的特例，列值不可为null  全文索引  对文本内容进行查询时，能加快速度  单列索引  就是常见的一个列字段的索引  组合索引  多个列字段">
@@ -218,7 +218,7 @@
 <li><p>但是聚集索引在辅助索引查询时效率低非聚集索引低，因为需要检索两次b+树，第一次找到主键值，第二次根据主键值找到相关记录</p>
 </li>
 </ul>
-<h3 id="innerDB和myIsam的区别"><a href="#innerDB和myIsam的区别" class="headerlink" title="innerDB和myIsam的区别"></a>innerDB和myIsam的区别</h3><p>||myIsam|innerDB|<br>|–|–|–|–|<br>|索引类型|非聚集索引|聚集索引<br>|索引底层结构|b+树|b树<br>|是否支持事务|否|是<br>|是否支持表锁|是|是<br>|是否支持行数|否|是<br>|是否支持外键|否|是<br>|是否支持全文索引|是|是<br>|是否支持hash索引|否|否<br>|适用操作|大量select|大量insert、delete和update下</p>
+<h3 id="innerDB和myIsam的区别"><a href="#innerDB和myIsam的区别" class="headerlink" title="innerDB和myIsam的区别"></a>innerDB和myIsam的区别</h3><p>|myIsam|innerDB|<br>|–|–|–|–|<br>|索引类型|非聚集索引|聚集索引|<br>|索引底层结构|b+树|b树|<br>|是否支持事务|否|是|<br>|是否支持表锁|是|是|<br>|是否支持行数|否|是|<br>|是否支持外键|否|是|<br>|是否支持全文索引|是|是|<br>|是否支持hash索引|否|否|<br>|适用操作|大量select|大量insert、delete和update下|</p>
 <h1 id="三，补充"><a href="#三，补充" class="headerlink" title="三，补充"></a>三，补充</h1><h2 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h2><p>只有memory（内存）存储引擎支持哈希索引，哈希索引用索引列的值计算该值的hashCode，然后在hashCode相应的位置存执该值所在行数据的物理位置，因为使用散列算法，因此访问速度非常快，但是一个值只能对应一个hashCode，而且是散列的分布方式，因此哈希索引不支持范围查找和排序的功能，但是hash适用于 = 或者 in的等值查询</p>
 
       
@@ -519,15 +519,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">项目总结</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
               </li>
             
             <div class="clearfix"></div>
