@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://kevin091827.github.io">
-  <title>Archives: 2019 | Kevin&#39;s blog</title>
+  <title>散列表及哈希冲突 | Kevin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Kevin&#39;s blog">
-<meta property="og:url" content="https://kevin091827.github.io/archives/2019/page/3/index.html">
+  <meta name="description" content="一，哈希结构1.什么是哈希我们知道数组这种数据结构的查询效率是高的，知道数组下标的查询时间复杂度能到O(1),哈希，也叫作散列，散列在查询上有点类似数组查询的思想，根据下标直接定位到元素位置，获取元素值，与数组下标的固定是从0开始不断递增1不同的是，散列的下标是通过散列函数根据元素映射得到，最理想的散列是，每个位置只对应一个元素，且表的大小刚好合适，哈希是一种在插入，删除，查询都很高效的数据结构">
+<meta name="keywords" content="数据结构和算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="散列表及哈希冲突">
+<meta property="og:url" content="https://kevin091827.github.io/2019/08/13/散列表及哈希冲突/index.html">
 <meta property="og:site_name" content="Kevin&#39;s blog">
+<meta property="og:description" content="一，哈希结构1.什么是哈希我们知道数组这种数据结构的查询效率是高的，知道数组下标的查询时间复杂度能到O(1),哈希，也叫作散列，散列在查询上有点类似数组查询的思想，根据下标直接定位到元素位置，获取元素值，与数组下标的固定是从0开始不断递增1不同的是，散列的下标是通过散列函数根据元素映射得到，最理想的散列是，每个位置只对应一个元素，且表的大小刚好合适，哈希是一种在插入，删除，查询都很高效的数据结构">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813010101651.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:updated_time" content="2019-08-12T17:08:17.787Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kevin&#39;s blog">
+<meta name="twitter:title" content="散列表及哈希冲突">
+<meta name="twitter:description" content="一，哈希结构1.什么是哈希我们知道数组这种数据结构的查询效率是高的，知道数组下标的查询时间复杂度能到O(1),哈希，也叫作散列，散列在查询上有点类似数组查询的思想，根据下标直接定位到元素位置，获取元素值，与数组下标的固定是从0开始不断递增1不同的是，散列的下标是通过散列函数根据元素映射得到，最理想的散列是，每个位置只对应一个元素，且表的大小刚好合适，哈希是一种在插入，删除，查询都很高效的数据结构">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190813010101651.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70">
   
     <link rel="alternative" href="/atom.xml" title="Kevin&#39;s blog" type="application/atom+xml">
   
@@ -128,313 +135,245 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-散列表及哈希冲突" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      散列表及哈希冲突
+    </h1>
+  
+
+        
+        <a href="/2019/08/13/散列表及哈希冲突/" class="archive-article-date">
+  	<time datetime="2019-08-12T17:07:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-13</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一，哈希结构"><a href="#一，哈希结构" class="headerlink" title="一，哈希结构"></a>一，哈希结构</h1><h2 id="1-什么是哈希"><a href="#1-什么是哈希" class="headerlink" title="1.什么是哈希"></a>1.什么是哈希</h2><p>我们知道数组这种数据结构的查询效率是高的，知道数组下标的查询时间复杂度能到O(1),哈希，也叫作散列，散列在查询上有点类似数组查询的思想，根据下标直接定位到元素位置，获取元素值，与数组下标的固定是从0开始不断递增1不同的是，散列的下标是通过散列函数根据元素映射得到，最理想的散列是，每个位置只对应一个元素，且表的大小刚好合适，哈希是一种在插入，删除，查询都很高效的数据结构</p>
+<h2 id="2-为什么需要哈希"><a href="#2-为什么需要哈希" class="headerlink" title="2.为什么需要哈希"></a>2.为什么需要哈希</h2><p>相信大家多多少少肯定会对查找算法有些了解，比如顺序查找、二分查找、利用“二叉搜索树”查找等等。顺序查找适用于数据量不大的时候；二分查找虽然时间复杂度较为乐观，但前提是数据元素已经按照关键字排序并且存储在连续的地址空间中；二叉搜索树查找具有相当不错的时间复杂度，但有时需要附加条件。那这样我们就需要一种适应性广而速度又快的查找算法。那这种查询算法就是基于哈希这种数据结构</p>
+<h1 id="二，哈希函数"><a href="#二，哈希函数" class="headerlink" title="二，哈希函数"></a>二，哈希函数</h1><p><h>哈希函数编写</h></p>
+<li>1.直接定址法</li>
+    <p>关键字或关键字的一个线性函数值作为地址</p>
+    <p>f(key) = a × key + b</p>
+    <p>f(key) = key</p>
+<li>2.除余法</li>
+    <p>一般是大于20的质数，p通常要小于表大小m，取余数为地址</p>
+    <p>H(key) = key % p, p < m</p>
+<li>3.折叠法</li>
+    <p>将关键字分为位数相同的几部分，然后取这几部分的叠加和（舍去进位）作为散列地址。用于关键字位数较多，并且关键字中每一位上数字分布大致均匀。</p>
+<li>4.提取法</li>
+    <p>取关键字的某些部分作为地址</p>
+    <p>h(key) = x </p>
+<li>5.平方取中法</li>
+    <p>关键字被平方后去中间部分作为地址</p>
+    <p>f(key) = h(key^2) h(x): 取中间部分</p>
+
+
+<h1 id="三，哈希冲突"><a href="#三，哈希冲突" class="headerlink" title="三，哈希冲突"></a>三，哈希冲突</h1><p>刚刚我也提到了，最理想的散列是一个下标对应一个元素，像数组那样，但是，现实中肯定会存在两个元素经过散列函数得到下标值一样，即在散列表中的位置是一样的，那这样不就产生冲突了吗？对，这种就称为哈希冲突。</p>
+<h2 id="解决哈希冲突的方法"><a href="#解决哈希冲突的方法" class="headerlink" title="解决哈希冲突的方法"></a>解决哈希冲突的方法</h2><p>常用的解决哈希冲突的方法可以分为两大类：</p>
+<ul>
+<li><p>开放定址法</p>
+<ul>
+<li>线性探测法</li>
+<li>平方探测法</li>
+<li>双散列法</li>
+<li>再散列法</li>
+</ul>
+</li>
+<li><p>分离链接法</p>
+</li>
+</ul>
+<h3 id="开放定址法"><a href="#开放定址法" class="headerlink" title="开放定址法"></a>开放定址法</h3><p>所谓开放地址法，就是一旦产生了冲突，即该地址已经存放了其他数据元素，就去寻找另一个空的散列地址。在没有装满的散列表中，空的散列地址是有的，但是怎么去找，这是我们应该考虑的因素之一</p>
+<p>一般来说，如果关键词经过散列函数得出散列地址后发现有冲突，那么就需要试探性散列函数去试试其他附近的散列地址是否是空的。如果还发生冲突的话就再次使用试探性散列函数再去试试其他散列地址</p>
+<p>这些试探性函数就是上面提到的那些，在这里重点说下线性探测法</p>
+<p><strong>线性探测法</strong></p>
+<p>基本思想是： </p>
+<p>探查时从地址 d 开始，首先探查 T[d]，然后依次探查 T[d+1]，…，直到 T[m-1]，此后又循环到 T[0]，T[1]，…，直到探查到 有空余地址 或者到 T[d-1]为止。</p>
+<p>代码实现：</p>
+<p>散列表每一个位置的情况</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//存放元素</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HashEntry</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Object element;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">boolean</span> isActive;<span class="comment">//false：该元素已被删除</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HashEntry</span><span class="params">(Object element, <span class="keyword">boolean</span> isActive)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.element = element;</span><br><span class="line">        <span class="keyword">this</span>.isActive = isActive;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HashEntry</span><span class="params">(Object element)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(element,<span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>构造散列表，其实就是很多个hashEntry连接起来，形成数组结构</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> HASHTABLE_SIZE = <span class="number">11</span>;</span><br><span class="line"><span class="comment">//散列表</span></span><br><span class="line"><span class="keyword">private</span> HashEntry[] array;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> currentSize;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">QuadraticProbingHashTable</span><span class="params">(<span class="keyword">int</span> currentSize)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//分配数组大小</span></span><br><span class="line">    allocateArray(currentSize);</span><br><span class="line">    <span class="comment">//每一项置空，现在是空的散列表</span></span><br><span class="line">    makeEmpty();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">QuadraticProbingHashTable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(HASHTABLE_SIZE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 分配数组大小</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> currentSize</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">allocateArray</span><span class="params">(<span class="keyword">int</span> currentSize)</span> </span>&#123;</span><br><span class="line">    array = <span class="keyword">new</span> HashEntry[nextPrime(currentSize)];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 散列表变为空散列表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">makeEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    currentSize = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;array.length;i++)&#123;</span><br><span class="line">        array[i] = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来进行各种操作，包括插入，删除，即哈希函数</p>
+<p>哈希函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 返回哈希表位置（相当于之前的散列函数）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findPos</span><span class="params">(Object x)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//先取一下哈希值</span></span><br><span class="line">    <span class="keyword">int</span> currentPos = hash(x);</span><br><span class="line">    <span class="comment">//偏移</span></span><br><span class="line">    <span class="keyword">int</span> offset = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//线性探测法</span></span><br><span class="line">    <span class="keyword">while</span>(array[currentPos] != <span class="keyword">null</span> &amp;&amp; !array[currentPos].element.equals(x))&#123;</span><br><span class="line">        currentPos += offset;</span><br><span class="line">        offset += <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(currentPos &gt;= array.length)&#123;</span><br><span class="line">            currentPos -= array.length;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> currentPos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 哈希函数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> hashCode = key.hashCode();</span><br><span class="line">    hashCode %= array.length;</span><br><span class="line">    <span class="keyword">if</span>(hashCode &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">        hashCode += array.length;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> hashCode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里的findPos方法中的while循环其实就是实现线性探测法，不断向前探测是否有空闲位置，必要时可以回到散列表开始处，继续向前</p>
+<p>插入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入元素到散列表</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(Object x)</span></span>&#123;</span><br><span class="line">    <span class="comment">//获取在散列表的下标，相当于之前的散列函数</span></span><br><span class="line">    <span class="keyword">int</span> current = findPos(x);</span><br><span class="line">    <span class="comment">//看是否被删除过，如果还存在，就什么都不做，直接返回</span></span><br><span class="line">    <span class="keyword">if</span>(isActive(current))&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    array[current] = <span class="keyword">new</span> HashEntry(x);</span><br><span class="line">    <span class="comment">//装填因子不宜大于0.5</span></span><br><span class="line">    <span class="keyword">if</span>(currentSize &gt;= array.length/<span class="number">2</span>)&#123;</span><br><span class="line">        <span class="comment">//大于则扩容哈希表</span></span><br><span class="line">        grow();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断该元素是否被删除过，false：已被删除</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> currentPos</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isActive</span><span class="params">(<span class="keyword">int</span> currentPos)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> array[currentPos] != <span class="keyword">null</span> &amp;&amp; array[currentPos].isActive;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 扩容</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    HashEntry[] oldArray = array;</span><br><span class="line">    allocateArray(nextPrime(array.length * <span class="number">2</span>));</span><br><span class="line">    currentSize = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;array.length;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(oldArray[i]!=<span class="keyword">null</span> &amp;&amp; oldArray[i].isActive)&#123;</span><br><span class="line">            insert(oldArray[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 散列表是否包含该元素</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object x)</span></span>&#123;</span><br><span class="line">    <span class="comment">//找到在散列表的位置</span></span><br><span class="line">    <span class="keyword">int</span> currentPos = findPos(x);</span><br><span class="line">    <span class="comment">//判断元素是否被删除过</span></span><br><span class="line">    <span class="keyword">return</span> isActive(currentPos);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 获取下一个素数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> num</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">nextPrime</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = num + <span class="number">1</span>;; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">boolean</span> isPrime = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">2</span>; j &lt; i; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i % j == <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                isPrime = <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(isPrime)</span><br><span class="line">        &#123;</span><br><span class="line">            System.out.println(num + <span class="string">" 后面的第一个素数是: "</span> + i);</span><br><span class="line">            System.out.println();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>删除</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 删除</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(Object x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> current = findPos(x);</span><br><span class="line">    <span class="keyword">if</span>(!isActive(current))&#123;</span><br><span class="line">        array[current].isActive = <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="分离链接法"><a href="#分离链接法" class="headerlink" title="分离链接法"></a>分离链接法</h3><p>分离链接法(Separate Chaining)是解决冲突的另一种方法，其做法是将所有关键词为同义词(散列地址一致的关键词)的数据对象通过结点链接存储在同一个单链表中。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190813010101651.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>代码实现：</p>
+<p>基于linkedList构造哈希表</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//默认表大小</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> HASHTABLE_SIZE = <span class="number">101</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//开放定址法实际上就是链表的一个数组集合</span></span><br><span class="line"><span class="keyword">private</span> LinkedList[] myLists;</span><br><span class="line"></span><br><span class="line"><span class="comment">//哈希表大小</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">SeparateChainingHashTable</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(HASHTABLE_SIZE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基于linkedList构造哈希表</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> size</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">SeparateChainingHashTable</span><span class="params">(<span class="keyword">int</span> size)</span></span>&#123;</span><br><span class="line">    myLists = <span class="keyword">new</span> LinkedList[nextPrime(size)];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; myLists.length;i++)&#123;</span><br><span class="line">        myLists[i] = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>插入：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入指定元素到哈希表中</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(Object key)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> hashCode = hash(key);</span><br><span class="line">    <span class="keyword">if</span>(hashCode &gt; myLists.length)&#123;</span><br><span class="line">        grow();</span><br><span class="line">    &#125;</span><br><span class="line">    LinkedList linkedList = myLists[hashCode];</span><br><span class="line">    <span class="keyword">if</span>(!contains(key))&#123;</span><br><span class="line">        linkedList.add(key);</span><br><span class="line">        <span class="keyword">if</span>(++size &gt; myLists.length)&#123;</span><br><span class="line">            grow();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 哈希表扩容（数组扩容）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    LinkedList[] oldList = myLists;</span><br><span class="line">    myLists = <span class="keyword">new</span> LinkedList[nextPrime(<span class="number">2</span> * myLists.length)];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; myLists.length;i++)&#123;</span><br><span class="line">        myLists[i] = <span class="keyword">new</span> LinkedList();</span><br><span class="line">    &#125;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; myLists.length;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (Object item : oldList[i])&#123;</span><br><span class="line">            insert(item);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 哈希函数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> hashCode = key.hashCode();</span><br><span class="line">    hashCode %= myLists.length;</span><br><span class="line">    <span class="keyword">if</span>(hashCode &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">        hashCode += myLists.length;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> hashCode;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 获取下一个素数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> num</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">nextPrime</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = num + <span class="number">1</span>;; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">boolean</span> isPrime = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">2</span>; j &lt; i; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i % j == <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                isPrime = <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(isPrime)</span><br><span class="line">        &#123;</span><br><span class="line">            System.out.println(num + <span class="string">" 后面的第一个素数是: "</span> + i);</span><br><span class="line">            System.out.println();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>删除：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 删除指定元素</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(Object key)</span></span>&#123;</span><br><span class="line">    LinkedList linkedList = myLists[hash(key)];</span><br><span class="line">    <span class="keyword">if</span>(linkedList.contains(key))&#123;</span><br><span class="line">        linkedList.remove(key);</span><br><span class="line">        size--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/alipay_code.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/wechat_code.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/16/第三大的数/" class="archive-article-date">
-  	<time datetime="2019-07-16T13:35:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/16/第三大的数/">第三大的数</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://kevin091827.github.io/2019/08/13/散列表及哈希冲突/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/15/找出不重复的数字/" class="archive-article-date">
-  	<time datetime="2019-07-15T15:44:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-15</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/08/11/b树和b-树/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">b树和b+树</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/15/找出不重复的数字/">找出不重复的数字</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/15/数组-缺失的数字/" class="archive-article-date">
-  	<time datetime="2019-07-15T15:03:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/15/数组-缺失的数字/">数组 -- 缺失的数字</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/14/选择排序/" class="archive-article-date">
-  	<time datetime="2019-07-14T06:51:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/14/选择排序/">选择排序</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">排序算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/13/有序数组/" class="archive-article-date">
-  	<time datetime="2019-07-13T14:28:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-13</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/13/有序数组/">两数之和2 - 输入有序数组</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/12/hello-world/" class="archive-article-date">
-  	<time datetime="2019-07-12T08:25:27.795Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-12</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/12/hello-world/">Hello World</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/18/java中的加密算法/" class="archive-article-date">
-  	<time datetime="2019-06-17T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/18/java中的加密算法/">java中的加密算法</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/2019/page/2/">&laquo; Prev</a><a class="page-number" href="/archives/2019/">1</a><a class="page-number" href="/archives/2019/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+  
+
+  
+
   
 
 
@@ -458,8 +397,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
