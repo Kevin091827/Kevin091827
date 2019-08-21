@@ -130,6 +130,214 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-从mysql索引谈b树和b+树" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/08/从mysql索引谈b树和b+树/">从mysql索引谈b树和b+树</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/08/从mysql索引谈b树和b+树/" class="archive-article-date">
+  	<time datetime="2019-08-08T13:31:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一，mysql索引"><a href="#一，mysql索引" class="headerlink" title="一，mysql索引"></a>一，mysql索引</h1><p>mysql对索引的定义就是：索引是帮助高效获取数据的数据结构，</p>
+<h2 id="1-mysql中索引的使用"><a href="#1-mysql中索引的使用" class="headerlink" title="1.mysql中索引的使用"></a>1.mysql中索引的使用</h2><h3 id="mysql索引类型"><a href="#mysql索引类型" class="headerlink" title="mysql索引类型"></a>mysql索引类型</h3><p><strong>普通索引</strong></p>
+<ul>
+<li>其实就是普通的键，能加快查询速度 </li>
+</ul>
+<p><strong>唯一索引</strong></p>
+<ul>
+<li>加快查询，但是索引列值必须唯一，可以为null</li>
+</ul>
+<p><strong>主键索引</strong></p>
+<ul>
+<li>唯一索引的特例，列值不可为null</li>
+</ul>
+<p><strong>全文索引</strong></p>
+<ul>
+<li>对文本内容进行查询时，能加快速度</li>
+</ul>
+<p><strong>单列索引</strong></p>
+<ul>
+<li>就是常见的一个列字段的索引</li>
+</ul>
+<p><strong>组合索引</strong></p>
+<ul>
+<li>多个列字段组成一个索引，在组合搜索中效率快</li>
+</ul>
+<h3 id="mysql中的索引操作"><a href="#mysql中的索引操作" class="headerlink" title="mysql中的索引操作"></a>mysql中的索引操作</h3><p>1.创建索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--创建普通索引</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">index</span> index_name <span class="keyword">on</span> table_name(col_name)</span><br><span class="line"></span><br><span class="line"><span class="comment">--创建唯一索引</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">unique</span> <span class="keyword">index</span> index_name <span class="keyword">on</span> table_name(col_name)</span><br><span class="line"></span><br><span class="line"><span class="comment">--创建组合索引</span></span><br><span class="line"><span class="comment">--遵循“最左前缀”原则，把最常用作为检索或排序的列放在最左，依次递减，组合索引相当于建立了col1,col1col2,col1col2col3三个索引，而col2或者col3是不能使用索引的。</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">index</span> index_name <span class="keyword">on</span> table_name(col_name1,col_name2,col_name3)</span><br><span class="line"></span><br><span class="line"><span class="comment">--创建唯一组合索引</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">unique</span> <span class="keyword">index</span> index_name <span class="keyword">on</span> table_name(col_name1,col_name2)</span><br></pre></td></tr></table></figure>
+
+<p>2.通过修改表结构创建索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> table_name <span class="keyword">add</span> <span class="keyword">index</span> index_name(col_name) </span><br><span class="line"></span><br><span class="line"><span class="comment">--创建全文索引</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="string">'table_name'</span> <span class="keyword">ADD</span> FULLTEXT <span class="keyword">INDEX</span> ft_index(<span class="string">'col'</span>)；</span><br></pre></td></tr></table></figure>
+
+<p>3.删除索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> <span class="keyword">index</span> index_name <span class="keyword">on</span> table_name</span><br></pre></td></tr></table></figure>
+
+<h1 id="二，mysql索引底层数据结构"><a href="#二，mysql索引底层数据结构" class="headerlink" title="二，mysql索引底层数据结构"></a>二，mysql索引底层数据结构</h1><p>mysql中的索引是在存储引擎中实现的而不是在服务器端实现的，所以，不同存储引擎支持的索引可能也会有所不同</p>
+<p>我们在开头就提到，索引是mysql高效获取数据的数据结构，也就是说，索引其实归根揭底也是一种数据结构</p>
+<h2 id="1-猜想索引的数据结构"><a href="#1-猜想索引的数据结构" class="headerlink" title="1.猜想索引的数据结构"></a>1.猜想索引的数据结构</h2><p>索引绝大多数情况都是用在查询操作当中，那么我们列举下我们知道的查找算法</p>
+<p><strong>1. 顺序查找？</strong></p>
+<pre><code>顺序查找复杂度是O(n)，在数据大的情况下，这种算法的查询表现是十分糟糕的</code></pre><p><strong>2. 二叉树查找？</strong></p>
+<pre><code>如果是二叉搜索树：有可能会出现深度过大的左偏树或者右偏树，这样时间复杂度就会有O(logN)变为O(N)
+
+如果是二叉搜索树的进化版平衡二叉树又或者红黑数呢：在数据量大的情况下，基于两个子树的二叉树还是会显得深度过大</code></pre><p><strong>3.多叉树？</strong></p>
+<pre><code>目前大部分数据库系统及文件系统都采用B-Tree或其变种B+Tree作为索引结构</code></pre><h2 id="2-基于多叉树的索引实现"><a href="#2-基于多叉树的索引实现" class="headerlink" title="2.基于多叉树的索引实现"></a>2.基于多叉树的索引实现</h2><p>在mysql中不同存储引擎对索引的实现也不同，本文主要讨论MyISAM和InnoDB两个存储引擎的索引实现方式。</p>
+<h3 id="MyIsam索引实现（非聚集索引）"><a href="#MyIsam索引实现（非聚集索引）" class="headerlink" title="MyIsam索引实现（非聚集索引）"></a>MyIsam索引实现（非聚集索引）</h3><p>MyIsam引擎使用B+树来实现索引，在B+树的叶子节点数据域中存放的mysql表数据记录的地址</p>
+<p><img src="https://img-blog.csdnimg.cn/20190809210653928.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>这里设表一共有三列，假设我们以Col1为主键，则图8是一个MyISAM表的主索引（Primary key）示意。可以看出MyISAM的索引文件仅仅保存数据记录的地址。在MyISAM中，主索引和辅助索引（Secondary key）在结构上没有任何区别，只是主索引要求key是唯一的，而辅助索引的key可以重复。如果我们在Col2上建立一个辅助索引，则此索引的结构如下图所示：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190809210820897.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>在进行sql查询时，会根据查询语句中的索引条件，在b+树中找到相应的叶子节点，取出相应的数据地址，然后获取相关表记录</p>
+<h3 id="innerDB索引实现（聚集索引）"><a href="#innerDB索引实现（聚集索引）" class="headerlink" title="innerDB索引实现（聚集索引）"></a>innerDB索引实现（聚集索引）</h3><p>虽然innerDB也使用b+树作为索引结构，但是实现方式和myisam不同</p>
+<p>在主索引中，b+树叶子节点数据域中存储的是数据库表相关列的完整记录</p>
+<p><img src="https://img-blog.csdnimg.cn/20190809211253940.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>在辅助索引中，b+树叶子节点存储的是主键的值</p>
+<p><img src="https://img-blog.csdnimg.cn/20190809211347423.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>这种就是聚集索引</p>
+<ul>
+<li><p>聚集索引在进行主索引查询时效率很高，直接找到相关叶子节点就可以找到相关数据记录，非聚集索引还需要根据数据地址去寻找数据记录</p>
+</li>
+<li><p>但是聚集索引在辅助索引查询时效率低非聚集索引低，因为需要检索两次b+树，第一次找到主键值，第二次根据主键值找到相关记录</p>
+</li>
+</ul>
+<h3 id="为什么要使用多叉树实现呢？"><a href="#为什么要使用多叉树实现呢？" class="headerlink" title="为什么要使用多叉树实现呢？"></a>为什么要使用多叉树实现呢？</h3><p>我们知道平衡的二叉查找树可以做到树的高度小于普通的二叉查找树且查询效率可以达到O(logN),但是，当在大量数据存储在磁盘时，我们并不能一下就将这些数据全部都加载到内存中，而是一页一页的加载，每一磁盘页的数据对应一个树的节点，当树的节点过多时，会造成大量磁盘IO操作，最坏情况下就是树的深度，平衡二叉树由于树深度过大而造成磁盘IO读写过于频繁，进而导致效率低下。 </p>
+<p>所以，这就是使用平衡的多路查找树的原因，既可以降低树的高度，又能保证查询效率在O(logN)</p>
+<h4 id="多叉树简述"><a href="#多叉树简述" class="headerlink" title="多叉树简述"></a>多叉树简述</h4><h5 id="b树"><a href="#b树" class="headerlink" title="b树"></a>b树</h5><p>b树是最普通的一类多叉树，一个m阶的b树具有如下几个特征：</p>
+<ul>
+<li>b树中所有节点的的子节点数的最大值称为b树的阶</li>
+<li>一个节点有k个孩子，那么必有k-1个关键字才能将子节点划分为k个子集</li>
+<li>根结点至少有两个子女。</li>
+<li>每个中间节点都包含k-1个元素和k个孩子，其中 ceil（m/2） ≤ k ≤ m</li>
+<li>每一个叶子节点都包含k-1个元素，其中 ceil（m/2） ≤ k ≤ m</li>
+<li>所有的叶子结点都位于同一层。</li>
+<li>每个节点中的元素从小到大排列，节点当中k-1个元素正好是k个孩子包含的元素的值域划分</li>
+<li>每个结点的结构为：（n，A0，K1，A1，K2，A2，…  ，Kn，An）<br>  其中，Ki(1≤i≤n)为关键字，且Ki&lt;Ki+1(1≤i≤n-1)。<br>Ai(0≤i≤n)为指向子树根结点的指针。且Ai所指子树所有结点中的关键字均小于Ki+1。<br>n为结点中关键字的个数，满足ceil(m/2)-1≤n≤m-1。</li>
+</ul>
+<p>例如：</p>
+<p>三阶b树:最大子节点数量为3,节点关键字为2个</p>
+<p><img src="https://img-blog.csdn.net/2018032420113990?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p><strong>查询操作</strong></p>
+<p>　　以上图为例：若查询的数值为５： </p>
+<p>　　第一次磁盘ＩＯ：在内存中定位（与17、35比较），比17小，左子树； </p>
+<p>　　第二次磁盘ＩＯ：在内存中定位（与８、12比较），比８小，左子树； </p>
+<p>　　第三次磁盘ＩＯ：在内存中定位（与3、5比较），找到5，终止。 </p>
+<p><img src="https://img-blog.csdnimg.cn/20190811112208920.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>整个过程中，我们可以看出：比较的次数并不比二叉查找树少，尤其适当某一节点中的数据很多时，但是磁盘IO的次数却是大大减少。比较是在内存中进行的，相比于磁盘IO的速度，比较的耗时几乎可以忽略。所以当树的高度足够低的话，就可以极大的提高效率。相比之下，节点中的元素多点也没关系，仅仅是多了几次内存交互而已，只要不超过磁盘页的大小即可。现在重点关注的就是磁盘IO的次数</p>
+<p><strong>插入操作</strong></p>
+<p>若被插入节点的关键字个数 &lt; m-1 ，则直接插入</p>
+<p>若被插入节点的关键字个数等于m-1，则会引起该节点分裂，将节点中间值插入到该节点的父节点</p>
+<p>重复上述工作，最坏情况一直分裂到根结点，建立一个新的根结点，整个B树增加一层。</p>
+<p>eg：插入4</p>
+<p><img src="https://img-blog.csdn.net/20180324225635106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p>会引起节点分裂，将中间值4提到父节点,若扔引起分裂，重复操作</p>
+<p><img src="https://img-blog.csdn.net/20180324230149255?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p>之所以要分裂，其实就是维护多叉树平衡的一个性质，相当于平衡树中的旋转</p>
+<p><strong>删除操作</strong><br>Ｂ树中关键字的删除比插入更复杂，在这里说下跟b树插入节点类似的一种删除方法:</p>
+<p>eg:删除11</p>
+<p><img src="https://img-blog.csdn.net/20180324232514619?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p>但是删除后12只有右子节点了，需要判断其左右兄弟结点中有“多余”的关键字，即：原关键字个数n&gt;=ceil(m/2) - 1</p>
+<p>右子节点分裂</p>
+<p><img src="https://img-blog.csdn.net/20180324232544302?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p><strong>补充：</strong></p>
+<ul>
+<li>B树主要用于文件系统以及部分数据库索引，例如： MongoDB。而大部分关系数据库则使用B+树做索引，例如：mysql数据库； </li>
+<li>从查找效率考虑一般要求B树的阶数m &gt;= 3; </li>
+<li>B-树上算法的执行时间主要由读、写磁盘的次数来决定，故一次I/O操作应读写尽可能多的信息。因此B-树的结点规模一般以一个磁盘页为单位。一个结点包含的关键字及其孩子个数取决于磁盘页的大小。</li>
+</ul>
+<h5 id="b-树"><a href="#b-树" class="headerlink" title="b+树"></a>b+树</h5><p>Ｂ＋树是Ｂ树的变种，有着比Ｂ树更高的查询效率</p>
+<p>特征：</p>
+<ol>
+<li><p>有k个子树的中间节点包含有k个元素（B树中是k-1个元素），每个元素不保存数据，只用来索引，所有数据<br>都保存在叶子节点。</p>
+</li>
+<li><p>所有的叶子结点中包含了全部元素的信息，及指向含这些元素记录的指针，且叶子结点本身依关键字的大小<br>自小而大顺序链接。</p>
+</li>
+<li><p>所有的中间节点元素都同时存在于子节点，在子节点元素中是最大（或最小）元素。</p>
+</li>
+</ol>
+<p>eg：三阶b+树</p>
+<p><img src="https://img-blog.csdn.net/20180325001555181?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p><strong>查找</strong></p>
+<p>B+树通常有两个指针，一个指向根结点，另一个指向关键字最小的叶子结点。因些，对于B+树进行查找两种运算：一种是从最小关键字起顺序查找，另一种是从根结点开始，进行随机查找。</p>
+<p>B+树相比B树的优势：</p>
+<ol>
+<li>b+树中间节点存储的是数据在叶节点的索引，可以包含的关键字更多,单一节点存储更多的元素，使得查询的IO次数更少； </li>
+<li>所有查询都要查找到叶子节点，查询性能稳定； </li>
+<li>所有叶子节点形成有序链表，便于范围查询。</li>
+</ol>
+<p>eg:范围查询</p>
+<p>b树范围查询：</p>
+<p><img src="https://img-blog.csdn.net/20180325111523599?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p>b+树：</p>
+<p><img src="https://img-blog.csdn.net/20180325111559207?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pfcnlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<h3 id="innerDB和myIsam的区别"><a href="#innerDB和myIsam的区别" class="headerlink" title="innerDB和myIsam的区别"></a>innerDB和myIsam的区别</h3><p>|myIsam|innerDB|<br>|–|–|–|–|<br>|索引类型|非聚集索引|聚集索引|<br>|索引底层结构|b+树|b树|<br>|是否支持事务|否|是|<br>|是否支持表锁|是|是|<br>|是否支持行数|否|是|<br>|是否支持外键|否|是|<br>|是否支持全文索引|是|是|<br>|是否支持hash索引|否|否|<br>|适用操作|大量select|大量insert、delete和update下|</p>
+<h1 id="三，补充"><a href="#三，补充" class="headerlink" title="三，补充"></a>三，补充</h1><h2 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h2><p>只有memory（内存）存储引擎支持哈希索引，哈希索引用索引列的值计算该值的hashCode，然后在hashCode相应的位置存执该值所在行数据的物理位置，因为使用散列算法，因此访问速度非常快，但是一个值只能对应一个hashCode，而且是散列的分布方式，因此哈希索引不支持范围查找和排序的功能，但是hash适用于 = 或者 in的等值查询</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">mysql</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/08/从mysql索引谈b树和b+树/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-字符串匹配KMP" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1450,119 +1658,6 @@
 
 
   
-    <article id="post-二叉搜索树" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/25/二叉搜索树/">二叉搜索树</a>
-    </h1>
-  
-
-        
-        <a href="/2019/07/25/二叉搜索树/" class="archive-article-date">
-  	<time datetime="2019-07-25T08:12:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一，二叉搜索树"><a href="#一，二叉搜索树" class="headerlink" title="一，二叉搜索树"></a>一，二叉搜索树</h2><p><strong>性质：</strong></p>
-<ul>
-<li><p>对于树中的每个节点，他的左子树中的所有项都小于根节点，他的右子树中的所有项都大于根节点</p>
-</li>
-<li><p>二叉查找树的平均深度是O(logN)所有一般不必担心栈空间溢出</p>
-</li>
-<li><p>二叉查找树要求所有的项都能够被排序</p>
-</li>
-</ul>
-<h2 id="二，二叉查找树相关操作"><a href="#二，二叉查找树相关操作" class="headerlink" title="二，二叉查找树相关操作"></a>二，二叉查找树相关操作</h2><h3 id="1-判断是否存在指定节点"><a href="#1-判断是否存在指定节点" class="headerlink" title="1.判断是否存在指定节点"></a>1.判断是否存在指定节点</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断是否包含指定节点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> node</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contain</span><span class="params">(T x,Node node)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(node == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> result = x.compareTo((T)node.getElement());</span><br><span class="line">    <span class="keyword">if</span>(result &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> contain(x,node.getLeft());</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(result &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> contain(x,node.getRight());</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-构造二叉搜索树"><a href="#2-构造二叉搜索树" class="headerlink" title="2.构造二叉搜索树"></a>2.构造二叉搜索树</h3><p>思路：</p>
-<p>根据二叉搜索树的性质，左子节点 &lt; 根节点 &lt; 右子节点</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 构造二叉树</span></span><br><span class="line"><span class="comment"> * 【递归】</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> t</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Node&lt;T&gt; <span class="title">insert</span><span class="params">(T x,Node&lt;T&gt; t)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Node&lt;T&gt;(x,<span class="keyword">null</span>,<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> result = x.compareTo(t.element);</span><br><span class="line">    <span class="keyword">if</span>(result &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        t.left = insert(x,t.getLeft());</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(result &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        t.right = insert(x,t.getRight());</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//dosomething</span></span><br><span class="line">        t.element = x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>构造二叉搜索树</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"*******构造二叉查找树*******"</span>);</span><br><span class="line">    BinarySearchTree&lt;Integer&gt; binarySearchTree = <span class="keyword">new</span> BinarySearchTree&lt;&gt;();</span><br><span class="line">    Node root = <span class="keyword">new</span> Node&lt;Integer&gt;(<span class="number">12</span>);</span><br><span class="line">    binarySearchTree.setRoot(root);</span><br><span class="line">    binarySearchTree.insert(<span class="number">10</span>, root);</span><br><span class="line">    binarySearchTree.insert(<span class="number">13</span>, root);</span><br><span class="line">    binarySearchTree.insert(<span class="number">11</span>,root);</span><br><span class="line">    binarySearchTree.insert(<span class="number">15</span>, root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-删除节点"><a href="#3-删除节点" class="headerlink" title="3.删除节点"></a>3.删除节点</h3><p>删除节点其实有三种情况需要考虑：</p>
-<ul>
-<li>没有左右子节点，可以直接删除</li>
-<li>只有左子节点或只有右子节点，删除后需要进行节点移动</li>
-<li>同时存在左右子节点，则将删除节点和中序遍历结果中该节点的后继节点交换</li>
-</ul>
-<p>二叉搜索树中的中序遍历结果就是一个排序后的序列</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 删除指定节点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">remove</span><span class="params">(T x,Node root)</span></span>&#123;</span><br><span class="line">    Node&lt;Integer&gt; temp;</span><br><span class="line">    <span class="comment">//没有要删除的元素，因为这是空树</span></span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> result = x.compareTo((T) root.element);</span><br><span class="line">    <span class="keyword">if</span>(result&lt;<span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">//左子树递归删除</span></span><br><span class="line">        root.left = remove(x, root.left);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span> (result&gt;<span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">//右子树递归删除</span></span><br><span class="line">        root.right = remove(x, root.right);</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//找到要删除的元素</span></span><br><span class="line">        <span class="comment">//要删除元素有两个节点的情况</span></span><br><span class="line">        <span class="keyword">if</span> (root.left!=<span class="keyword">null</span> &amp;&amp; root.right!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//在右子树中找出最小的节点填充删除的节点</span></span><br><span class="line">            <span class="comment">//root.element = findMin(root.right).element;</span></span><br><span class="line">            temp= findMin(root.right);</span><br><span class="line">            <span class="comment">//在删除节点的右子树中删除最小元素，即刚刚填充的元素</span></span><br><span class="line">            root.right = remove((T)root.element, root.right);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//单节点情况</span></span><br><span class="line">            temp = root;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//root = (root.left != null)?root.left:root.right;</span></span><br><span class="line">            <span class="keyword">if</span>(root.left == <span class="keyword">null</span>) &#123;</span><br><span class="line">                root = root.right;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span> (root.right == <span class="keyword">null</span>) &#123;</span><br><span class="line">                root = root.left;</span><br><span class="line">            &#125;</span><br><span class="line">            temp = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-遍历"><a href="#4-遍历" class="headerlink" title="4.遍历"></a>4.遍历</h3><p><strong>广度优先遍历</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 广度优先遍历</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">breathFirst</span><span class="params">(Node root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ArrayList&lt;T&gt; resultList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Queue&lt;Node&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        queue.add(root);</span><br><span class="line">        <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">            root = queue.remove();</span><br><span class="line">            resultList.add((T) root.getElement());</span><br><span class="line">            <span class="keyword">if</span>(root.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(root.getLeft());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(root.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">                queue.add(root.getRight());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(T i : resultList)&#123;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>前序遍历</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 前序遍历</span></span><br><span class="line"><span class="comment"> * 【递归实现】</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preOrder</span><span class="params">(Node root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root != <span class="keyword">null</span>)&#123;</span><br><span class="line">        System.out.println(root.getElement());</span><br><span class="line">        preOrder(root.getLeft());</span><br><span class="line">        preOrder(root.getRight());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 前序遍历</span></span><br><span class="line"><span class="comment"> * 【非递归实现】</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preOrder2</span><span class="params">(Node root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ArrayList&lt;T&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Stack&lt;Node&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    stack.push(root);</span><br><span class="line">    <span class="keyword">while</span>(!stack.isEmpty())&#123;</span><br><span class="line">        Node node = stack.pop();</span><br><span class="line">        list.add((T) node.getElement());</span><br><span class="line">        <span class="keyword">if</span>(node.getRight() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(node.getRight());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(node.getLeft() != <span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(node.getLeft());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(T i : list)&#123;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>中序遍历</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="5-寻找最大节点"><a href="#5-寻找最大节点" class="headerlink" title="5.寻找最大节点"></a>5.寻找最大节点</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 找出最大节点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> node</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">findMax</span><span class="params">(Node node)</span></span>&#123;</span><br><span class="line">    Node maxNode = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">while</span>(node != <span class="keyword">null</span>)&#123;</span><br><span class="line">        maxNode = node;</span><br><span class="line">        node = node.right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> maxNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="6-寻找最小节点"><a href="#6-寻找最小节点" class="headerlink" title="6.寻找最小节点"></a>6.寻找最小节点</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 找到最小节点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> node</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">findMin</span><span class="params">(Node node)</span></span>&#123;</span><br><span class="line">    Node minNode = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">while</span>(node != <span class="keyword">null</span>)&#123;</span><br><span class="line">        minNode = node;</span><br><span class="line">        node = node.left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> minNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/25/二叉搜索树/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1705,11 +1800,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color5">源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码分析</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
