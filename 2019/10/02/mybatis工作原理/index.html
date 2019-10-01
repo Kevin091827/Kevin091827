@@ -6,15 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://kevin091827.github.io">
-  <title>Archives | Kevin&#39;s blog</title>
+  <title>mybatis工作原理 | Kevin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Kevin&#39;s blog">
-<meta property="og:url" content="https://kevin091827.github.io/archives/page/5/index.html">
+  <meta name="description" content="mybatis工作原理 最近在复习框架的基础知识，利用国庆假期，想复习下mybatis，jpa，hibernate等orm框架，如果觉得写得还不错，有帮助到你，可以点波关注，我会继续更，一起努力！  1.工作流程核心配置文件读取配置文件的读取时mybatis工作的第一步，也可以当初是mybatis的初始化 在这一步中，mybatis做了些什么？下边将会解析这几部分  mybatis基于xml配置文">
+<meta name="keywords" content="mybatis,春招复习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mybatis工作原理">
+<meta property="og:url" content="https://kevin091827.github.io/2019/10/02/mybatis工作原理/index.html">
 <meta property="og:site_name" content="Kevin&#39;s blog">
+<meta property="og:description" content="mybatis工作原理 最近在复习框架的基础知识，利用国庆假期，想复习下mybatis，jpa，hibernate等orm框架，如果觉得写得还不错，有帮助到你，可以点波关注，我会继续更，一起努力！  1.工作流程核心配置文件读取配置文件的读取时mybatis工作的第一步，也可以当初是mybatis的初始化 在这一步中，mybatis做了些什么？下边将会解析这几部分  mybatis基于xml配置文">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="c:%5CUsers%5C12642%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1569939999990.png">
+<meta property="og:image" content="https://static.oschina.net/uploads/space/2016/0505/181036_SgDu_2727738.jpg">
+<meta property="og:updated_time" content="2019-10-01T16:45:07.120Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kevin&#39;s blog">
+<meta name="twitter:title" content="mybatis工作原理">
+<meta name="twitter:description" content="mybatis工作原理 最近在复习框架的基础知识，利用国庆假期，想复习下mybatis，jpa，hibernate等orm框架，如果觉得写得还不错，有帮助到你，可以点波关注，我会继续更，一起努力！  1.工作流程核心配置文件读取配置文件的读取时mybatis工作的第一步，也可以当初是mybatis的初始化 在这一步中，mybatis做了些什么？下边将会解析这几部分  mybatis基于xml配置文">
+<meta name="twitter:image" content="c:%5CUsers%5C12642%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1569939999990.png">
   
     <link rel="alternative" href="/atom.xml" title="Kevin&#39;s blog" type="application/atom+xml">
   
@@ -128,275 +136,285 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-mybatis工作原理" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      mybatis工作原理
+    </h1>
+  
+
+        
+        <a href="/2019/10/02/mybatis工作原理/" class="archive-article-date">
+  	<time datetime="2019-10-01T16:43:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-02</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="mybatis工作原理"><a href="#mybatis工作原理" class="headerlink" title="mybatis工作原理"></a>mybatis工作原理</h1><blockquote>
+<p>最近在复习框架的基础知识，利用国庆假期，想复习下mybatis，jpa，hibernate等orm框架，如果觉得写得还不错，有帮助到你，可以点波关注，我会继续更，一起努力！</p>
+</blockquote>
+<h2 id="1-工作流程"><a href="#1-工作流程" class="headerlink" title="1.工作流程"></a>1.工作流程</h2><h3 id="核心配置文件读取"><a href="#核心配置文件读取" class="headerlink" title="核心配置文件读取"></a>核心配置文件读取</h3><p>配置文件的读取时mybatis工作的第一步，也可以当初是mybatis的初始化</p>
+<p>在这一步中，mybatis做了些什么？下边将会解析这几部分</p>
+<ul>
+<li>mybatis基于xml配置文件创建Configuration对象的过程</li>
+<li>基于configuration对象创建sqlSessionFactory的过程</li>
+<li>SQLSessionFactory创建sqlSession的过程</li>
+</ul>
+<h4 id="1，mybatis基于xml配置文件创建Configuration对象的过程"><a href="#1，mybatis基于xml配置文件创建Configuration对象的过程" class="headerlink" title="1，mybatis基于xml配置文件创建Configuration对象的过程"></a>1，mybatis基于xml配置文件创建Configuration对象的过程</h4><p><strong>mybatis-config.xml</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE configuration</span></span><br><span class="line"><span class="meta">  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"</span></span><br><span class="line"><span class="meta">  "http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 属性 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">properties</span> <span class="attr">resource</span>=<span class="string">"db.properties"</span>&gt;</span><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 别名 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">typeAliases</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">typeAlias</span> <span class="attr">type</span>=<span class="string">"com.example.mybatis.entity.User"</span> <span class="attr">value</span>=<span class="string">"u"</span>&gt;</span><span class="tag">&lt;/<span class="name">typeAlias</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">"com.example.mybatis.enity"</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">typeAliases</span>&gt;</span></span><br><span class="line"> 	<span class="comment">&lt;!-- 设置 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 全局开启或关闭配置文件中的所有映射器已经配置的任何缓存,默认是开启 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"cacheEnabled"</span> <span class="attr">value</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 延迟加载，默认关闭 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"lazyLoadingEnabled"</span> <span class="attr">value</span>=<span class="string">"false"</span> /&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 是否允许单一语句返回多结果集，默认开启 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"multipleResultSetsEnabled"</span> <span class="attr">value</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 使用列标签代替列名，默认开启 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"useColumnLabel"</span> <span class="attr">value</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 允许 JDBC 支持自动生成主键，默认关闭 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"useGeneratedKeys"</span> <span class="attr">value</span>=<span class="string">"false"</span> /&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 指定 MyBatis 应如何自动映射列到字段或属性，默认只会自动映射没有定义嵌套结果集映射的结果集 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"autoMappingBehavior"</span> <span class="attr">value</span>=<span class="string">"PARTIAL"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"autoMappingUnknownColumnBehavior"</span></span></span><br><span class="line"><span class="tag">			<span class="attr">value</span>=<span class="string">"WARNING"</span> /&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 默认执行器simple --&gt;</span>	</span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"defaultExecutorType"</span> <span class="attr">value</span>=<span class="string">"SIMPLE"</span> /&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 默认超时时间 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"defaultStatementTimeout"</span> <span class="attr">value</span>=<span class="string">"25"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"defaultFetchSize"</span> <span class="attr">value</span>=<span class="string">"100"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"safeRowBoundsEnabled"</span> <span class="attr">value</span>=<span class="string">"false"</span> /&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 是否开启自动驼峰命名规则（camel case）映射，即从经典数据库列名 A_COLUMN 到经典 Java 属性名 aColumn 的类似映射。默认不开启--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"mapUnderscoreToCamelCase"</span> <span class="attr">value</span>=<span class="string">"false"</span> /&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 默认开启一级缓存，不在sqlsession间共享 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"localCacheScope"</span> <span class="attr">value</span>=<span class="string">"SESSION"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"jdbcTypeForNull"</span> <span class="attr">value</span>=<span class="string">"OTHER"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"lazyLoadTriggerMethods"</span></span></span><br><span class="line"><span class="tag">			<span class="attr">value</span>=<span class="string">"equals,clone,hashCode,toString"</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 环境配置 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">"development"</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- id为环境的唯一标识 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">"development"</span>&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- 事物管理 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">"JDBC"</span> /&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- 数据源 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">"POOLED"</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driver"</span> <span class="attr">value</span>=<span class="string">"$&#123;driver&#125;"</span> /&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"$&#123;url&#125;"</span> /&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"$&#123;username&#125;"</span> /&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"$&#123;password&#125;"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">	<span class="comment">&lt;!-- 多数据库支持 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">databaseIdProvider</span> <span class="attr">type</span>=<span class="string">"DB_VENDOR"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"MySQL"</span> <span class="attr">value</span>=<span class="string">"mysql"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"Oracle"</span> <span class="attr">value</span>=<span class="string">"oracle"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"SQL Server"</span> <span class="attr">value</span>=<span class="string">"sql server"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">databaseIdProvider</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">	<span class="comment">&lt;!-- sql映射文件注册 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">"com/example/mybatis/dao/UserMapper.xml"</span>&gt;</span><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">mapper</span> <span class="attr">class</span>=<span class="string">"com.example.mybatis.dao.UserMapperAnnotaion"</span>&gt;</span><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Configuration可以把其看成一个entity实体，主要包括下列属性：</p>
+<ul>
+<li><p>properties（属性）</p>
+</li>
+<li><p>settings（设置）</p>
+</li>
+<li><p>typeAliases（类型别名）</p>
+</li>
+<li><p>typeHandlers（类型处理器）</p>
+</li>
+<li><p>objectFactory（对象工厂）</p>
+</li>
+<li><p>plugins（插件）</p>
+</li>
+<li><p>environments（环境配置）</p>
+<ul>
+<li>environment（环境变量）</li>
+<li>transactionManager（事务管理器）</li>
+<li>dataSource（数据源）</li>
+</ul>
+</li>
+<li><p>databaseIdProvider（数据库厂商标识）</p>
+</li>
+<li><p>mappers（映射器）</p>
+</li>
+</ul>
+<p>所以说，mybatis初始化就是相当于conguration对象的初始化过程</p>
+<h4 id="2，基于configuration对象创建sqlSessionFactory的过程"><a href="#2，基于configuration对象创建sqlSessionFactory的过程" class="headerlink" title="2，基于configuration对象创建sqlSessionFactory的过程"></a>2，基于configuration对象创建sqlSessionFactory的过程</h4><p>那么，这个conguration的初始化过程是怎样的呢？</p>
+<p>先看下边这段java代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//配置文件</span></span><br><span class="line">String resource = <span class="string">"mybatis-config.xml"</span>;</span><br><span class="line"><span class="comment">//获取配置文件输入流</span></span><br><span class="line">InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line"><span class="comment">//获取sqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);</span><br></pre></td></tr></table></figure>
+
+<p>大体流程：</p>
+<p><img src="C:%5CUsers%5C12642%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1569939999990.png" alt="1569939999990"></p>
+<p>sqlSessionFactory构建大体流程：</p>
+<ol>
+<li><p>将mybatis.xml写入输入流inputStream</p>
+</li>
+<li><p>基于输入流构建sqlSessionFactory</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>委托XMLConfigBuilder来解析xml文件     </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">XMLConfigBuilder parser = <span class="keyword">new</span> XMLConfigBuilder(inputStream, environment, properties);*       </span><br><span class="line"><span class="keyword">return</span> build(parser.parse());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>装配到conguration对象</p>
+</li>
+<li><p>构建sqlSessionFactory</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> SqlSessionFactory <span class="title">build</span><span class="params">(Configuration config)</span> </span>&#123;</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> DefaultSqlSessionFactory(config);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><strong>具体看看关于mybatis配置文件解析过程</strong></p>
+<ol>
+<li><p>xml解析是交给XMLConfigBuilder来进行的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//将输入流交给XMLConfigBuilder</span></span><br><span class="line">XMLConfigBuilder parser = <span class="keyword">new</span> XMLConfigBuilder(inputStream, environment, properties);</span><br><span class="line"><span class="comment">//paser()进行xml解析</span></span><br><span class="line"><span class="keyword">return</span> build(parser.parse());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>xml解析，获取conguration配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">  <span class="function"><span class="keyword">public</span> Configuration <span class="title">parse</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//如果已经解析过了，报错</span></span><br><span class="line">    <span class="keyword">if</span> (parsed) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> BuilderException(<span class="string">"Each XMLConfigBuilder can only be used once."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    parsed = <span class="keyword">true</span>;</span><br><span class="line"><span class="comment">//  &lt;?xml version="1.0" encoding="UTF-8" ?&gt; </span></span><br><span class="line"><span class="comment">//  &lt;!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" </span></span><br><span class="line"><span class="comment">//  "http://mybatis.org/dtd/mybatis-3-config.dtd"&gt; </span></span><br><span class="line"><span class="comment">//  &lt;configuration&gt; </span></span><br><span class="line"><span class="comment">//  &lt;environments default="development"&gt; </span></span><br><span class="line"><span class="comment">//  &lt;environment id="development"&gt; </span></span><br><span class="line"><span class="comment">//  &lt;transactionManager type="JDBC"/&gt; </span></span><br><span class="line"><span class="comment">//  &lt;dataSource type="POOLED"&gt; </span></span><br><span class="line"><span class="comment">//  &lt;property name="driver" value="$&#123;driver&#125;"/&gt; </span></span><br><span class="line"><span class="comment">//  &lt;property name="url" value="$&#123;url&#125;"/&gt; </span></span><br><span class="line"><span class="comment">//  &lt;property name="username" value="$&#123;username&#125;"/&gt; </span></span><br><span class="line"><span class="comment">//  &lt;property name="password" value="$&#123;password&#125;"/&gt; </span></span><br><span class="line"><span class="comment">//  &lt;/dataSource&gt; </span></span><br><span class="line"><span class="comment">//  &lt;/environment&gt; </span></span><br><span class="line"><span class="comment">//  &lt;/environments&gt;</span></span><br><span class="line"><span class="comment">//  &lt;mappers&gt; </span></span><br><span class="line"><span class="comment">//  &lt;mapper resource="org/mybatis/example/BlogMapper.xml"/&gt; </span></span><br><span class="line"><span class="comment">//  &lt;/mappers&gt; </span></span><br><span class="line"><span class="comment">//  &lt;/configuration&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//根节点是configuration</span></span><br><span class="line">    parseConfiguration(parser.evalNode(<span class="string">"/configuration"</span>));</span><br><span class="line">    <span class="keyword">return</span> configuration;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解析配置，并初始化conguration</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//解析配置</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">parseConfiguration</span><span class="params">(XNode root)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//分步骤解析</span></span><br><span class="line">    <span class="comment">//issue #117 read properties first</span></span><br><span class="line">    <span class="comment">//1.properties</span></span><br><span class="line">    propertiesElement(root.evalNode(<span class="string">"properties"</span>));</span><br><span class="line">    <span class="comment">//2.类型别名</span></span><br><span class="line">    typeAliasesElement(root.evalNode(<span class="string">"typeAliases"</span>));</span><br><span class="line">    <span class="comment">//3.插件</span></span><br><span class="line">    pluginElement(root.evalNode(<span class="string">"plugins"</span>));</span><br><span class="line">    <span class="comment">//4.对象工厂</span></span><br><span class="line">    objectFactoryElement(root.evalNode(<span class="string">"objectFactory"</span>));</span><br><span class="line">    <span class="comment">//5.对象包装工厂</span></span><br><span class="line">    objectWrapperFactoryElement(root.evalNode(<span class="string">"objectWrapperFactory"</span>));</span><br><span class="line">    <span class="comment">//6.设置</span></span><br><span class="line">    settingsElement(root.evalNode(<span class="string">"settings"</span>));</span><br><span class="line">    <span class="comment">// read it after objectFactory and objectWrapperFactory issue #631</span></span><br><span class="line">    <span class="comment">//7.环境</span></span><br><span class="line">    environmentsElement(root.evalNode(<span class="string">"environments"</span>));</span><br><span class="line">    <span class="comment">//8.databaseIdProvider</span></span><br><span class="line">    databaseIdProviderElement(root.evalNode(<span class="string">"databaseIdProvider"</span>));</span><br><span class="line">    <span class="comment">//9.类型处理器</span></span><br><span class="line">    typeHandlerElement(root.evalNode(<span class="string">"typeHandlers"</span>));</span><br><span class="line">    <span class="comment">//10.映射器</span></span><br><span class="line">    mapperElement(root.evalNode(<span class="string">"mappers"</span>));</span><br><span class="line">  &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> BuilderException(<span class="string">"Error parsing SQL Mapper Configuration. Cause: "</span> + e, e);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>初始化conguration过程，取其中一个说明</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">propertiesElement</span><span class="params">(XNode context)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"><span class="comment">//...省略一些代码</span></span><br><span class="line">    configuration.setVariables(defaults);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3，SQLSessionFactory创建sqlSession的过程"><a href="#3，SQLSessionFactory创建sqlSession的过程" class="headerlink" title="3，SQLSessionFactory创建sqlSession的过程"></a>3，SQLSessionFactory创建sqlSession的过程</h4><p>sqlSession是与数据库进行交互的，可以从sqlSessionFactory中调用openSession获取一个sqlSession</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> SqlSession <span class="title">openSession</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> openSessionFromDataSource(configuration.getDefaultExecutorType(), <span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置事务和执行器，默认的执行器是simpleExecutor</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> SqlSession <span class="title">openSessionFromDataSource</span><span class="params">(ExecutorType execType, TransactionIsolationLevel level, <span class="keyword">boolean</span> autoCommit)</span> </span>&#123;</span><br><span class="line">  Transaction tx = <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> Environment environment = configuration.getEnvironment();</span><br><span class="line">    <span class="keyword">final</span> TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</span><br><span class="line">    <span class="comment">//通过事务工厂来产生一个事务</span></span><br><span class="line">    tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);</span><br><span class="line">    <span class="comment">//生成一个执行器(事务包含在执行器里)</span></span><br><span class="line">    <span class="keyword">final</span> Executor executor = configuration.newExecutor(tx, execType);</span><br><span class="line">    <span class="comment">//然后产生一个DefaultSqlSession</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DefaultSqlSession(configuration, executor, autoCommit);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    <span class="comment">//如果打开事务出错，则关闭它</span></span><br><span class="line">    closeTransaction(tx); <span class="comment">// may have fetched a connection so lets call close()</span></span><br><span class="line">    <span class="keyword">throw</span> ExceptionFactory.wrapException(<span class="string">"Error opening session.  Cause: "</span> + e, e);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="comment">//最后清空错误上下文</span></span><br><span class="line">    ErrorContext.instance().reset();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Executor执行器执行sql"><a href="#Executor执行器执行sql" class="headerlink" title="Executor执行器执行sql"></a>Executor执行器执行sql</h3><h4 id="1，jdbc复习"><a href="#1，jdbc复习" class="headerlink" title="1，jdbc复习"></a>1，jdbc复习</h4><p>连接工厂</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> String JDBC_URL = <span class="string">""</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> String USERNAME = <span class="string">""</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> String PASSWORD = <span class="string">""</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> String DRIVER = <span class="string">"com.mysql.jdbc.Driver"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 获取数据库连接</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Connection <span class="title">getConnection</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Connection connection = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//将加载的驱动类注册给DriverManager</span></span><br><span class="line">        Class.forName(DRIVER);</span><br><span class="line">        <span class="comment">//获取数据库连接</span></span><br><span class="line">        connection = DriverManager.getConnection(JDBC_URL,USERNAME,PASSWORD);</span><br><span class="line">        <span class="keyword">return</span> connection;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 关闭数据库连接</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> connection</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(Connection connection)</span></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(connection != <span class="keyword">null</span>) &#123;</span><br><span class="line">            connection.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>增删改查工具类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 增删改</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> sql</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> params</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> connection</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">update</span><span class="params">(String sql, Object[] params, Connection connection)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">//连接为null，则抛出异常</span></span><br><span class="line">    <span class="keyword">if</span>(connection == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"connection is null"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//操作数据库</span></span><br><span class="line">    PreparedStatement preparedStatement = connection.prepareStatement(sql);</span><br><span class="line">    <span class="comment">//封装参数</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">null</span> != params)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; params.length; i++) &#123;</span><br><span class="line">            preparedStatement.setObject(i + <span class="number">1</span>, params[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//执行sql</span></span><br><span class="line">    <span class="keyword">int</span> i = preparedStatement.executeUpdate();</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查询</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> sql</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> params</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> connection</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ResultSet <span class="title">select</span><span class="params">(String sql, Object[] params, Connection connection)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    <span class="comment">//连接为null，则抛出异常</span></span><br><span class="line">    <span class="keyword">if</span>(connection == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"connection is null"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//操作数据库</span></span><br><span class="line">    PreparedStatement preparedStatement = connection.prepareStatement(sql);</span><br><span class="line">    <span class="comment">//封装参数</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">null</span> != params)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; params.length; i++) &#123;</span><br><span class="line">            preparedStatement.setObject(i + <span class="number">1</span>, params[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ResultSet resultSet = preparedStatement.executeQuery();</span><br><span class="line">    <span class="keyword">return</span> resultSet;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="jdbc知识点总结"><a href="#jdbc知识点总结" class="headerlink" title="jdbc知识点总结"></a>jdbc知识点总结</h5><p><strong>Statement和PreparedStatement</strong></p>
+<ol>
+<li>Statement和PreparedStatement都是用来执SQL语句</li>
+<li>Statement是使用字符串拼接的方式，容易发生sql注入</li>
+<li>PreparedStatement使用占位符参数设置，不容易发生sql注入</li>
+<li>PreparedStatement其具有预编译机制，性能比statement更快。</li>
+</ol>
+<h4 id="mybatis中的executor执行sql"><a href="#mybatis中的executor执行sql" class="headerlink" title="mybatis中的executor执行sql"></a>mybatis中的executor执行sql</h4><p>流程图：</p>
+<blockquote>
+<p>转发：<a href="https://blog.csdn.net/qq_22423635/article/details/88311996" target="_blank" rel="noopener">https://blog.csdn.net/qq_22423635/article/details/88311996</a></p>
+</blockquote>
+<p><img src="https://static.oschina.net/uploads/space/2016/0505/181036_SgDu_2727738.jpg" alt="å¨è¿éæå¥å¾çæè¿°"></p>
+<p>执行sql</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//update</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">doUpdate</span><span class="params">(MappedStatement ms, Object parameter)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">  Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    Configuration configuration = ms.getConfiguration();</span><br><span class="line">    <span class="comment">//新建一个StatementHandler</span></span><br><span class="line">    <span class="comment">//这里看到ResultHandler传入的是null</span></span><br><span class="line">    StatementHandler handler = configuration.newStatementHandler(<span class="keyword">this</span>, ms, parameter, RowBounds.DEFAULT, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">    <span class="comment">//准备语句</span></span><br><span class="line">    stmt = prepareStatement(handler, ms.getStatementLog());</span><br><span class="line">    <span class="comment">//StatementHandler.update</span></span><br><span class="line">    <span class="keyword">return</span> handler.update(stmt);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    closeStatement(stmt);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//select</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> &lt;E&gt; <span class="function">List&lt;E&gt; <span class="title">doQuery</span><span class="params">(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">  Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    Configuration configuration = ms.getConfiguration();</span><br><span class="line">    <span class="comment">//新建一个StatementHandler</span></span><br><span class="line">    <span class="comment">//这里看到ResultHandler传入了</span></span><br><span class="line">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);</span><br><span class="line">    <span class="comment">//准备语句</span></span><br><span class="line">    stmt = prepareStatement(handler, ms.getStatementLog());</span><br><span class="line">    <span class="comment">//StatementHandler.query</span></span><br><span class="line">    <span class="keyword">return</span> handler.&lt;E&gt;query(stmt, resultHandler);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    closeStatement(stmt);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/alipay_code.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/wechat_code.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/15/找出不重复的数字/" class="archive-article-date">
-  	<time datetime="2019-07-15T15:44:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/15/找出不重复的数字/">找出不重复的数字</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">mybatis</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">春招复习</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://kevin091827.github.io/2019/10/02/mybatis工作原理/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/15/数组-缺失的数字/" class="archive-article-date">
-  	<time datetime="2019-07-15T15:03:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-15</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/09/12/java基于redis实现排行榜/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">java基于redis实现排行榜</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/15/数组-缺失的数字/">数组 -- 缺失的数字</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/14/选择排序/" class="archive-article-date">
-  	<time datetime="2019-07-14T06:51:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/14/选择排序/">选择排序</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">排序算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/13/有序数组/" class="archive-article-date">
-  	<time datetime="2019-07-13T14:28:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-13</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/13/有序数组/">两数之和2 - 输入有序数组</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/12/hello-world/" class="archive-article-date">
-  	<time datetime="2019-07-12T08:25:27.795Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-12</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/12/hello-world/">Hello World</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/18/java中的加密算法/" class="archive-article-date">
-  	<time datetime="2019-06-17T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/18/java中的加密算法/">java中的加密算法</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/4/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><span class="page-number current">5</span>
-    </nav>
+  
+
+  
+
   
 
 
@@ -420,8 +438,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
