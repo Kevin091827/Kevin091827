@@ -130,6 +130,236 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-mybatis连接池事务管理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/02/mybatis连接池事务管理/">mybatis连接池事务管理</a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/02/mybatis连接池事务管理/" class="archive-article-date">
+  	<time datetime="2019-10-02T07:36:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="mybatis连接池和事务管理"><a href="#mybatis连接池和事务管理" class="headerlink" title="mybatis连接池和事务管理"></a>mybatis连接池和事务管理</h1><blockquote>
+<p>最近在复习框架的基础知识，利用国庆假期，想复习下mybatis，jpa，hibernate等orm框架，如果觉得写得还不错，有帮助到你，可以点波关注，我会继续更，一起努力！</p>
+</blockquote>
+<h2 id="一-连接池"><a href="#一-连接池" class="headerlink" title="一,连接池"></a>一,连接池</h2><p>为什么要使用连接池？</p>
+<p>创建一个java.sql.Connection对象的代价是如此巨大，是因为创建一个Connection对象的过程，在底层就相当于和数据库建立的通信连接，在建立通信连接的过程，消耗了这么多的时间，而往往我们建立连接后（即创建Connection对象后），就执行一个简单的SQL语句，然后就要抛弃掉，这是一个非常大的资源浪费！</p>
+<p>所以对于需要频繁地跟数据库交互的应用程序，可以在创建了Connection对象，并操作完数据库后，可以不释放掉资源，而是将它放到内存中，当下次需要操作数据库时，可以直接从内存中取出Connection对象，不需要再创建了，这样就极大地节省了创建Connection对象的资源消耗</p>
+<p>手写一个简单的数据库连接池：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConnectionPool</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String DRIVER = <span class="string">"com.mysql.jdbc.Driver"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String URL=<span class="string">""</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String USERNAME=<span class="string">""</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String PASSWORD=<span class="string">""</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class.forName(DRIVER);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> LinkedList&lt;Connection&gt; poollist = <span class="keyword">new</span> LinkedList&lt;Connection&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//向连接池中放入10个连接对象，封装到一个集合中</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConnectionPool</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++) &#123;</span><br><span class="line">            poollist.addLast(<span class="keyword">this</span>.creatConnection());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创造连接对象</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Connection <span class="title">creatConnection</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> DriverManager.getConnection(URL, USERNAME, PASSWORD);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//从连接池中取出一个连接对象</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Connection <span class="title">getConnection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> poollist.removeFirst();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//关闭连接，释放资源，将连接对象放回连接池中</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(Connection conn)</span> </span>&#123;</span><br><span class="line">        poollist.addLast(conn);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>mybatis的数据源分为：</p>
+<ul>
+<li>不使用连接池的UnpooledDataSource</li>
+<li>使用连接池的PooledDataSource</li>
+<li>使用JNDI实现的数据源的JndiDataSource</li>
+</ul>
+<h3 id="1-不使用连接池的UnpooledDataSource"><a href="#1-不使用连接池的UnpooledDataSource" class="headerlink" title="1.不使用连接池的UnpooledDataSource"></a>1.不使用连接池的UnpooledDataSource</h3><p>将数据库驱动，用户名密码等属性封装到properties中，底层还是使用熟悉的jdbc获取数据库连接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 底层还是熟悉的jdbc的数据库连接</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> properties</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> SQLException</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Connection <span class="title">doGetConnection</span><span class="params">(Properties properties)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">  initializeDriver();</span><br><span class="line">  <span class="comment">//属性的前缀是以“driver.”开 头的,它 是 通 过 DriverManager.getConnection(url,driverProperties)方法传递给数据库驱动</span></span><br><span class="line">  Connection connection = DriverManager.getConnection(url, properties);</span><br><span class="line">  configureConnection(connection);</span><br><span class="line">  <span class="keyword">return</span> connection;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191002120431391.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="2-使用连接池的PooledDataSource"><a href="#2-使用连接池的PooledDataSource" class="headerlink" title="2.使用连接池的PooledDataSource"></a>2.使用连接池的PooledDataSource</h3><p><strong>mybatis中PooledDataSource连接池的设计</strong></p>
+<p>PooledDataSource将connection包装成PooledConnection对象放到PoolState连接容器中，这个连接容器中有两种连接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> PooledDataSource dataSource;</span><br><span class="line"></span><br><span class="line"><span class="comment">//空闲的连接</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> List&lt;PooledConnection&gt; idleConnections = <span class="keyword">new</span> ArrayList&lt;PooledConnection&gt;();</span><br><span class="line"><span class="comment">//活动的连接</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> List&lt;PooledConnection&gt; activeConnections = <span class="keyword">new</span> ArrayList&lt;PooledConnection&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>PooledDataSource获取连接会优先从空闲连接list中取，当前正在被使用的连接会放入活动连接的list中</p>
+<p><img src="https://img-blog.csdn.net/20140710231403937?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbHVhbmxvdWlz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="img"></p>
+<p>获取连接的过程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Connection <span class="title">getConnection</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> popConnection(dataSource.getUsername(), dataSource.getPassword()).getProxyConnection();</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> Connection <span class="title">getConnection</span><span class="params">(String username, String password)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> popConnection(username, password).getProxyConnection();</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着从连接池中获取</p>
+<p>popConnection()主要获取连接的逻辑：</p>
+<ul>
+<li><p>while循环不断尝试获取</p>
+</li>
+<li><p>先判断空闲连接池中是否还有空闲连接</p>
+<ul>
+<li>有空闲连接：返回连接池第一个连接</li>
+<li>没有空闲连接：查看活动连接池信息</li>
+</ul>
+</li>
+<li><p>判断活动连接池中是否达到了最大连接数</p>
+<ul>
+<li>没有达到：直接new 一个新连接</li>
+<li>达到：不能再new新连接，获取连接池中最老的了、第一个连接，删除该连接后new 一个新连接</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//最外面是while死循环，如果一直拿不到connection，则不断尝试</span></span><br><span class="line"><span class="keyword">while</span> (conn == <span class="keyword">null</span>) &#123;</span><br><span class="line">  <span class="keyword">synchronized</span> (state) &#123;</span><br><span class="line">    <span class="comment">//先看看是否还有空闲连接</span></span><br><span class="line">    <span class="keyword">if</span> (!state.idleConnections.isEmpty()) &#123;</span><br><span class="line">      <span class="comment">//如果有空闲的连接的话，删除空闲列表里第一个，返回，拿到这个连接</span></span><br><span class="line">      conn = state.idleConnections.remove(<span class="number">0</span>);</span><br><span class="line">      <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">        log.debug(<span class="string">"Checked out connection "</span> + conn.getRealHashCode() + <span class="string">" from pool."</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    	<span class="comment">//如果没有空闲的连接，则判断活动连接list还有没有空间</span></span><br><span class="line">      <span class="keyword">if</span> (state.activeConnections.size() &lt; poolMaximumActiveConnections) &#123;</span><br><span class="line">    	  <span class="comment">//如果activeConnections太少,那就new一个PooledConnection</span></span><br><span class="line">        conn = <span class="keyword">new</span> PooledConnection(dataSource.getConnection(), <span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">          log.debug(<span class="string">"Created connection "</span> + conn.getRealHashCode() + <span class="string">"."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    	  <span class="comment">//如果activeConnections已经很多了，那不能再new了，此时取得activeConnections列表的第一个（最老的）</span></span><br><span class="line">        PooledConnection oldestActiveConnection = state.activeConnections.get(<span class="number">0</span>);</span><br><span class="line">        <span class="comment">//获取该连接的checkout时间</span></span><br><span class="line">        <span class="keyword">long</span> longestCheckoutTime = oldestActiveConnection.getCheckoutTime();</span><br><span class="line">        <span class="keyword">if</span> (longestCheckoutTime &gt; poolMaximumCheckoutTime) &#123;</span><br><span class="line">        	<span class="comment">//如果checkout时间过长，则这个connection标记为overdue（过期）</span></span><br><span class="line">          state.claimedOverdueConnectionCount++;</span><br><span class="line">          state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;</span><br><span class="line">          state.accumulatedCheckoutTime += longestCheckoutTime;</span><br><span class="line">          state.activeConnections.remove(oldestActiveConnection);</span><br><span class="line">          <span class="keyword">if</span> (!oldestActiveConnection.getRealConnection().getAutoCommit()) &#123;</span><br><span class="line">            oldestActiveConnection.getRealConnection().rollback();</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="comment">//删掉最老的连接，然后再new一个新连接</span></span><br><span class="line">          conn = <span class="keyword">new</span> PooledConnection(oldestActiveConnection.getRealConnection(), <span class="keyword">this</span>);</span><br><span class="line">          oldestActiveConnection.invalidate();</span><br></pre></td></tr></table></figure>
+
+<p>归还连接pushConnection</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (state) &#123;</span><br><span class="line">  <span class="comment">//先从activeConnections中删除此connection</span></span><br><span class="line">  state.activeConnections.remove(conn);</span><br><span class="line">  <span class="comment">//判断连接是否失效</span></span><br><span class="line">  <span class="keyword">if</span> (conn.isValid()) &#123;</span><br><span class="line">    <span class="comment">//如果空闲连接池还有空间</span></span><br><span class="line">    <span class="keyword">if</span> (state.idleConnections.size() &lt; poolMaximumIdleConnections &amp;&amp; conn.getConnectionTypeCode() == expectedConnectionTypeCode) &#123;</span><br><span class="line">  	  <span class="comment">//空闲的连接太少，</span></span><br><span class="line">      state.accumulatedCheckoutTime += conn.getCheckoutTime();</span><br><span class="line">      <span class="keyword">if</span> (!conn.getRealConnection().getAutoCommit()) &#123;</span><br><span class="line">        conn.getRealConnection().rollback();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//new一个新的Connection，加入到idle列表</span></span><br><span class="line">      PooledConnection newConn = <span class="keyword">new</span> PooledConnection(conn.getRealConnection(), <span class="keyword">this</span>);</span><br><span class="line">      state.idleConnections.add(newConn);</span><br><span class="line">      newConn.setCreatedTimestamp(conn.getCreatedTimestamp());</span><br><span class="line">      newConn.setLastUsedTimestamp(conn.getLastUsedTimestamp());</span><br><span class="line">      conn.invalidate();</span><br><span class="line">      <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">        log.debug(<span class="string">"Returned connection "</span> + newConn.getRealHashCode() + <span class="string">" to pool."</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//通知其他线程可以来抢connection了</span></span><br><span class="line">      state.notifyAll();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    	<span class="comment">//否则，即空闲的连接已经足够了</span></span><br><span class="line">      state.accumulatedCheckoutTime += conn.getCheckoutTime();</span><br><span class="line">      <span class="keyword">if</span> (!conn.getRealConnection().getAutoCommit()) &#123;</span><br><span class="line">        conn.getRealConnection().rollback();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//那就将connection关闭就可以了</span></span><br><span class="line">      conn.getRealConnection().close();</span><br><span class="line">      <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">        log.debug(<span class="string">"Closed connection "</span> + conn.getRealHashCode() + <span class="string">"."</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      conn.invalidate();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>关于JNDI连接池就不说了，我们一般使用阿里巴巴的druid或者HikariCP </p>
+<h2 id="二-mybatis事务管理"><a href="#二-mybatis事务管理" class="headerlink" title="二,mybatis事务管理"></a>二,mybatis事务管理</h2><h3 id="1，数据库事务复习"><a href="#1，数据库事务复习" class="headerlink" title="1，数据库事务复习"></a>1，数据库事务复习</h3><h4 id="1-ACID基本性质"><a href="#1-ACID基本性质" class="headerlink" title="1.ACID基本性质"></a>1.ACID基本性质</h4><ul>
+<li><p>原子性</p>
+<p>  一个事务中的所有操作，要么全部完成，要么全部不完成</p>
+</li>
+<li><p>一致性</p>
+<p>  事务必须使数据库从一个一致性状态变换到另一个一致性状态，也就是说一个事务执行之前和执行之后都必须处于一致性状态。</p>
+</li>
+<li><p>隔离性</p>
+<p>  是当多个用户并发访问数据库时，比如操作同一张表时，数据库为每一个用户开启的事务，不能被其他事务的操作所干扰，多个并发事务之间要相互隔离。</p>
+<ul>
+<li><p>读未提交</p>
+</li>
+<li><p>读已提交</p>
+</li>
+<li><p>可重复读（innoDB默认隔离级别）</p>
+</li>
+<li><p>不可重复读</p>
+<p><img src="https://img-blog.csdnimg.cn/2019100214451485.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+</li>
+</ul>
+</li>
+<li><p>持久性</p>
+<p>  是指一个事务一旦被提交了，那么对数据库中的数据的改变就是永久性的，即便是在数据库系统遇到故障的情况下也不会丢失提交事务的操作。</p>
+</li>
+</ul>
+<h4 id="2-java中的基本事务模型代码"><a href="#2-java中的基本事务模型代码" class="headerlink" title="2.java中的基本事务模型代码"></a>2.java中的基本事务模型代码</h4><p>jdbc中事务基本编写模板，还可以设定savepoint保存点，回滚事务时回滚到保存点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line">    conn.setAutoCommit(<span class="keyword">false</span>);  <span class="comment">//将自动提交设置为false           </span></span><br><span class="line">    ps.executeUpdate(<span class="string">"修改SQL"</span>); <span class="comment">//执行修改操作  </span></span><br><span class="line">    ps.executeQuery(<span class="string">"查询SQL"</span>);  <span class="comment">//执行查询操作                 </span></span><br><span class="line">    conn.commit();      <span class="comment">//当两个操作成功后手动提交            </span></span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;  </span><br><span class="line">    conn.rollback();    <span class="comment">//一旦其中一个操作出错都将回滚，使两个操作都不成功  </span></span><br><span class="line">    e.printStackTrace();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2，mybatis事务管理"><a href="#2，mybatis事务管理" class="headerlink" title="2，mybatis事务管理"></a>2，mybatis事务管理</h4><p>mybatis事务模块分层：</p>
+<p><img src="https://img-blog.csdnimg.cn/2019100215012290.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>可以看到Transaction定义了事务的创建，提交，回滚等操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Transaction</span> </span>&#123;</span><br><span class="line">  <span class="function">Connection <span class="title">getConnection</span><span class="params">()</span> <span class="keyword">throws</span> SQLException</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">commit</span><span class="params">()</span> <span class="keyword">throws</span> SQLException</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">rollback</span><span class="params">()</span> <span class="keyword">throws</span> SQLException</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> SQLException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也可以看到MyBatis的事务管理分为两种形式：</p>
+<ul>
+<li><p>一、使用JDBC的事务管理机制：即利用java.sql.Connection对象完成对事务的提交（commit()）、回滚（rollback()）、关闭（close()）等</p>
+</li>
+<li><p>二、使用MANAGED的事务管理机制：这种机制MyBatis自身不会去实现事务管理，而是让程序的容器如（JBOSS，Weblogic）来实现对事务的管理</p>
+</li>
+</ul>
+<p>重点分析下JDBC的事务管理机制在mybatis中的实现</p>
+<pre><code>JdbcTransaction直接使用JDBC的提交和回滚事务管理机制 。它依赖与从dataSource中取得的连接connection 来管理transaction 的作用域，connection对象的获取被延迟到调用getConnection()方法。如果autocommit设置为on，开启状态的话，它会忽略commit和rollback。
+
+直观地讲，就是JdbcTransaction是使用的java.sql.Connection 上的commit和rollback功能</code></pre><p>我们在spring整合mybatis时，mybatis配置文件中的一般这样使用事务</p>
+<blockquote>
+<p>转发自<a href="https://blog.csdn.net/luanlouis/article/details/37992171" target="_blank" rel="noopener">https://blog.csdn.net/luanlouis/article/details/37992171</a></p>
+</blockquote>
+<p><img src="https://img-blog.csdn.net/20140720150704081" alt="img"></p>
+<p>那么，mybatis事务管理的流程是：</p>
+<ol>
+<li><p>在初始化mybatis配置时，加载相关配置到conguration对象</p>
+</li>
+<li><p>根据配置创建事务工厂</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TransactionFactory txFactory = transactionManagerElement(child.evalNode(<span class="string">"transactionManager"</span>))</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<ol start="3">
+<li><p>从事务工厂中获取事务</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> ds  数据源</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> level Desired isolation level事务隔离级别</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> autoCommit Desired autocommit是否自动提交</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Transaction <span class="title">newTransaction</span><span class="params">(DataSource ds, TransactionIsolationLevel level, <span class="keyword">boolean</span> autoCommit)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> JdbcTransaction(ds, level, autoCommit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将事务封装在执行器中</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">BaseExecutor</span><span class="params">(Configuration configuration, Transaction transaction)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.transaction = transaction;</span><br><span class="line">  <span class="keyword">this</span>.deferredLoads = <span class="keyword">new</span> ConcurrentLinkedQueue&lt;DeferredLoad&gt;();</span><br><span class="line">  <span class="keyword">this</span>.localCache = <span class="keyword">new</span> PerpetualCache(<span class="string">"LocalCache"</span>);</span><br><span class="line">  <span class="keyword">this</span>.localOutputParameterCache = <span class="keyword">new</span> PerpetualCache(<span class="string">"LocalOutputParameterCache"</span>);</span><br><span class="line">  <span class="keyword">this</span>.closed = <span class="keyword">false</span>;</span><br><span class="line">  <span class="keyword">this</span>.configuration = configuration;</span><br><span class="line">  <span class="keyword">this</span>.wrapper = <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<ol start="5">
+<li><p>在具体的jdbcTrancation中底层还是jdbc的事务操作</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">commit</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (connection != <span class="keyword">null</span> &amp;&amp; !connection.getAutoCommit()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">      log.debug(<span class="string">"Committing JDBC Connection ["</span> + connection + <span class="string">"]"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//熟悉的commit  </span></span><br><span class="line">    connection.commit();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rollback</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (connection != <span class="keyword">null</span> &amp;&amp; !connection.getAutoCommit()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">      log.debug(<span class="string">"Rolling back JDBC Connection ["</span> + connection + <span class="string">"]"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//熟悉的rollback  </span></span><br><span class="line">    connection.rollback();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上面仅仅提到对jdbc的事务封装，那如何实现真正的事务管理呢</p>
+</li>
+</ol>
+<p>之前我们有说过mybatis的执行过程</p>
+<p><img src="https://img-blog.csdnimg.cn/20191002113818181.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="[å¤é¾å¾çè½¬å­å¤±è´¥,æºç«å¯è½æé²çé¾æºå¶,å»ºè®®å°å¾çä¿å­ä¸æ¥ç´æ¥ä¸ä¼ (img-RW5zE0vK-1569948080819)(C:\Users\12642\AppData\Roaming\Typora\typora-user-images\1569939999990.png)]"></p>
+<p>sqlSession是与数据库交互的工具，可以理解为一组数据库增删改查的一组操作，事务也是数据库的一组操作，那么mybatis对事务的管理就发生在一个一个的session中</p>
+<ul>
+<li><p>从sqlSessionFactory中获取sqlSession    </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> SqlSession <span class="title">openSession</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> openSessionFromDataSource(configuration.getDefaultExecutorType(), <span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在进入openSessionFromDataSource</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> SqlSession <span class="title">openSessionFromDataSource</span><span class="params">(ExecutorType execType, TransactionIsolationLevel level, <span class="keyword">boolean</span> autoCommit)</span> </span>&#123;</span><br><span class="line">  Transaction tx = <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> Environment environment = configuration.getEnvironment();</span><br><span class="line">    <span class="keyword">final</span> TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</span><br><span class="line">    <span class="comment">//通过事务工厂来产生一个事务</span></span><br><span class="line">    tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);</span><br><span class="line">    <span class="comment">//生成一个执行器(事务包含在执行器里)</span></span><br><span class="line">    <span class="keyword">final</span> Executor executor = configuration.newExecutor(tx, execType);</span><br><span class="line">    <span class="comment">//然后产生一个DefaultSqlSession</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DefaultSqlSession(configuration, executor, autoCommit);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    <span class="comment">//如果打开事务出错，则关闭它</span></span><br><span class="line">    closeTransaction(tx); <span class="comment">// may have fetched a connection so lets call close()</span></span><br><span class="line">    <span class="keyword">throw</span> ExceptionFactory.wrapException(<span class="string">"Error opening session.  Cause: "</span> + e, e);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="comment">//最后清空错误上下文</span></span><br><span class="line">    ErrorContext.instance().reset();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">mybatis</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">春招</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/02/mybatis连接池事务管理/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-mybatis工作原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1540,149 +1770,6 @@
 
 
   
-    <article id="post-优先队列常见算法题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/21/优先队列常见算法题/">优先队列常见算法题</a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/21/优先队列常见算法题/" class="archive-article-date">
-  	<time datetime="2019-08-21T14:09:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="数组中的第K个最大元素"><a href="#数组中的第K个最大元素" class="headerlink" title="数组中的第K个最大元素"></a>数组中的第K个最大元素</h1><h2 id="数组中的第K个最大元素-1"><a href="#数组中的第K个最大元素-1" class="headerlink" title="数组中的第K个最大元素"></a>数组中的第K个最大元素</h2><p>在未排序的数组中找到第 k 个最大的元素,请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。</p>
-<p>示例1：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [3,2,1,5,6,4] 和 k = 2</span><br><span class="line">输出: 5</span><br></pre></td></tr></table></figure>
-
-<p>示例2：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [3,2,3,1,2,4,5,5,6] 和 k = 4</span><br><span class="line">输出: 4</span><br></pre></td></tr></table></figure>
-
-<p><strong>使用优先队列和栈解决</strong></p>
-<ul>
-<li>建堆</li>
-<li>前k个元素出队</li>
-<li>栈保存出队元素</li>
-<li>栈顶即为第k大元素<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基于优先队列实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> nums</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> k</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findKthLargest</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//自定义排序规则</span></span><br><span class="line">    Comparator&lt;Integer&gt; comparator = <span class="keyword">new</span> Comparator&lt;Integer&gt;()&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Integer o1, Integer o2)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> o2 - o1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">//使用优先队列建堆</span></span><br><span class="line">    Queue&lt;Integer&gt; queue = <span class="keyword">new</span> PriorityQueue&lt;&gt;(comparator);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i : nums)&#123;</span><br><span class="line">        queue.offer(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取前k个最大元素</span></span><br><span class="line">    Stack&lt;Integer&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= k;i++)&#123;</span><br><span class="line">        stack.push(queue.poll());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//栈顶即第k大元素</span></span><br><span class="line">    <span class="keyword">return</span> stack.pop();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p><strong>也可以基于数组实现</strong></p>
-<ul>
-<li>排序</li>
-<li>数组指定定位获取<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基于数组实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> nums</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> k</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findKthLargest1</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//排序</span></span><br><span class="line">    Arrays.sort(nums);</span><br><span class="line">    <span class="comment">//因为排序是从小到大的，所以需要获取倒数的，即 len - k位置</span></span><br><span class="line">    <span class="keyword">return</span> nums[nums.length - k];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="设计一个找到数据流中第K大元素的类"><a href="#设计一个找到数据流中第K大元素的类" class="headerlink" title="设计一个找到数据流中第K大元素的类"></a>设计一个找到数据流中第K大元素的类</h2><p>设计一个找到数据流中第K大元素的类（class）。注意是排序后的第K大元素，不是第K个不同的元素。你的 KthLargest 类需要一个同时接收整数 k 和整数数组nums 的构造器，它包含数据流中的初始元素。每次调用 KthLargest.add，返回当前数据流中第K大的元素。</p>
-<p>示例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> k = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span>[] arr = [<span class="number">4</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">2</span>];</span><br><span class="line">KthLargest kthLargest = <span class="keyword">new</span> KthLargest(<span class="number">3</span>, arr);</span><br><span class="line">kthLargest.add(<span class="number">3</span>);   <span class="comment">// returns 4</span></span><br><span class="line">kthLargest.add(<span class="number">5</span>);   <span class="comment">// returns 5</span></span><br><span class="line">kthLargest.add(<span class="number">10</span>);  <span class="comment">// returns 5</span></span><br><span class="line">kthLargest.add(<span class="number">9</span>);   <span class="comment">// returns 8</span></span><br><span class="line">kthLargest.add(<span class="number">4</span>);   <span class="comment">// returns 8</span></span><br></pre></td></tr></table></figure>
-
-<p>这个与前面不同的是，要可以这不断有元素入队和出队的过程中，能正确返回正确的结果</p>
-<ul>
-<li><p>维护一个长度为k的堆，此堆就是维护了前k大的元素集合</p>
-</li>
-<li><p>add()是构造堆，关于具体元素的上滤和下滤的位置调整交由PriorityQueue</p>
-</li>
-<li><p>入堆：</p>
-<ul>
-<li><p>若堆元素 &lt; k，直接入队</p>
-</li>
-<li><p>若堆元素 &gt; k</p>
-<ul>
-<li>如果堆顶元素 &lt; 插入元素x，堆顶元素先出队，后让x入队</li>
-</ul>
-</li>
-<li><p>返回此时堆顶元素即为第k大元素    </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 【基于堆】</span></span><br><span class="line"><span class="comment"> * 使用优先队列最小堆，维护一个 k 大小的最小堆</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">int</span> k;</span><br><span class="line">Queue&lt;Integer&gt; queue;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">KthLargest</span><span class="params">(<span class="keyword">int</span> k, <span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.k = k;</span><br><span class="line">    <span class="comment">//构造堆</span></span><br><span class="line">    queue = <span class="keyword">new</span> PriorityQueue&lt;&gt;(k);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i : nums)&#123;</span><br><span class="line">       add(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 入队并且获取第k大的数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> val</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(queue.size() &lt; k)&#123;</span><br><span class="line">        queue.offer(val);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(queue.peek() &lt; val)&#123;</span><br><span class="line">        queue.poll();</span><br><span class="line">        queue.offer(val);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> queue.peek();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="前-K-个高频元素"><a href="#前-K-个高频元素" class="headerlink" title="前 K 个高频元素"></a>前 K 个高频元素</h2><p>给定一个非空的整数数组，返回其中出现频率前 k 高的元素。</p>
-<p>示例 1:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [1,1,1,2,2,3], k = 2</span><br><span class="line">输出: [1,2]</span><br></pre></td></tr></table></figure>
-
-<p>示例 2:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [1], k = 1</span><br><span class="line">输出: [1]</span><br></pre></td></tr></table></figure>
-
-<p>这道题相比之前的两道题目多了频次的，我们可以用之前学过的哈希表去保存某数字和其出现的频次，然后频次的比较作为比较规则</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">topKFrequent</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用散列表来保存数组每一个数的出现频率</span></span><br><span class="line">    Map&lt;Integer,Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> n: nums) &#123;</span><br><span class="line">        map.put(n, map.getOrDefault(n, <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//根据频次排序作为比较规则</span></span><br><span class="line">    Queue&lt;Integer&gt; queue = <span class="keyword">new</span> PriorityQueue&lt;&gt;((x,y)-&gt;map.get(x) - map.get(y));</span><br><span class="line">    <span class="comment">//所有键入队，当队长大于k时，原来入队的元素出队</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i : map.keySet())&#123;</span><br><span class="line">        queue.offer(i);</span><br><span class="line">        <span class="keyword">if</span>(queue.size() &gt; k)&#123;</span><br><span class="line">            queue.poll();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//保存结果</span></span><br><span class="line">    ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;(k);</span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        list.add(queue.poll());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="根据字符出现频率排序"><a href="#根据字符出现频率排序" class="headerlink" title="根据字符出现频率排序"></a>根据字符出现频率排序</h2><p>给定一个字符串，请将字符串里的字符按照出现的频率降序排列。</p>
-<p>示例 1:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line">&quot;tree&quot;</span><br><span class="line"></span><br><span class="line">输出:</span><br><span class="line">&quot;eert&quot;</span><br><span class="line"></span><br><span class="line">解释:</span><br><span class="line">&apos;e&apos;出现两次，&apos;r&apos;和&apos;t&apos;都只出现一次。</span><br><span class="line">因此&apos;e&apos;必须出现在&apos;r&apos;和&apos;t&apos;之前。此外，&quot;eetr&quot;也是一个有效的答案。</span><br></pre></td></tr></table></figure>
-
-<p>示例 2:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line">&quot;cccaaa&quot;</span><br><span class="line"></span><br><span class="line">输出:</span><br><span class="line">&quot;cccaaa&quot;</span><br><span class="line"></span><br><span class="line">解释:</span><br><span class="line">&apos;c&apos;和&apos;a&apos;都出现三次。此外，&quot;aaaccc&quot;也是有效的答案。</span><br><span class="line">注意&quot;cacaca&quot;是不正确的，因为相同的字母必须放在一起。</span><br></pre></td></tr></table></figure>
-
-<p>示例 3:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line">&quot;Aabb&quot;</span><br><span class="line"></span><br><span class="line">输出:</span><br><span class="line">&quot;bbAa&quot;</span><br><span class="line"></span><br><span class="line">解释:</span><br><span class="line">此外，&quot;bbaA&quot;也是一个有效的答案，但&quot;Aabb&quot;是不正确的。</span><br><span class="line">注意&apos;A&apos;和&apos;a&apos;被认为是两种不同的字符。</span><br></pre></td></tr></table></figure>
-
-<p>实现</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基于优先队列解决</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> s</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">frequencySort</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span>[] chars = s.toCharArray();</span><br><span class="line">    StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">    Map&lt;Character, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="comment">//map统计频次</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> c : chars) &#123;</span><br><span class="line">        map.put(c, map.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">        System.out.println(map.get(c));</span><br><span class="line">    &#125;</span><br><span class="line">    PriorityQueue&lt;Map.Entry&lt;Character, Integer&gt;&gt; queue = <span class="keyword">new</span> PriorityQueue&lt;&gt;((v1, v2) -&gt; v2.getValue() - v1.getValue());<span class="comment">//大顶堆</span></span><br><span class="line">    <span class="comment">//建堆</span></span><br><span class="line">    queue.addAll(map.entrySet());</span><br><span class="line">    <span class="keyword">int</span> len = queue.size();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">        <span class="keyword">char</span> key = queue.peek().getKey();  <span class="comment">//获取堆顶元素的键</span></span><br><span class="line">        <span class="keyword">int</span> value = queue.poll().getValue();<span class="comment">//获取并弹出堆顶元素的值</span></span><br><span class="line">        <span class="comment">//组合字符</span></span><br><span class="line">        <span class="keyword">while</span> (value-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            sb.append(key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sb.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/21/优先队列常见算法题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1813,6 +1900,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">链表</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
               </li>
              
@@ -1821,11 +1912,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">链表</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">排序算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1845,11 +1936,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">项目总结</a>
+                <a href="javascript:void(0)" class="js-tag color5">春招复习</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">春招复习</a>
+                <a href="javascript:void(0)" class="js-tag color5">项目总结</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1865,7 +1956,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">排序算法</a>
+                <a href="javascript:void(0)" class="js-tag color3">春招</a>
               </li>
             
             <div class="clearfix"></div>
