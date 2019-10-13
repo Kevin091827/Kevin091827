@@ -130,6 +130,284 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Stack源码分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/16/Stack源码分析/">Stack源码分析</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/16/Stack源码分析/" class="archive-article-date">
+  	<time datetime="2019-08-16T12:18:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前我们看过Vector，知道Vector是基于数组实现的，本文我们来看看Stack（栈）这种数据结构</p>
+<p>栈是一种先进后出的数据结构，可以基于数组实现，也可以基于链表实现</p>
+<p>java集合中的Stack是基于Vector实现的,对于Vector可以具体看<a href="https://blog.csdn.net/weixin_41922289/article/details/99680701" target="_blank" rel="noopener">Vector源码分析</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Vector</span>&lt;<span class="title">E</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h1><p>因为是基于Vector实现，是Vector的子类，所以同样，Stack的底层数据结构是数组</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Vector</span>&lt;<span class="title">E</span>&gt; </span></span><br><span class="line"><span class="class"></span></span><br><span class="line">protected Object[] elementData;</span><br></pre></td></tr></table></figure>
+
+<h1 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h1><p>只有一个默认的无参构造方法，调用构造一个空栈</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Stack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="进栈"><a href="#进栈" class="headerlink" title="进栈"></a>进栈</h1><p>进栈操作操作的数组的末端，数组的末端相当于栈顶</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">push</span><span class="params">(E item)</span> </span>&#123;</span><br><span class="line">    addElement(item);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用的是vector的添加元素的方法，默认是数组末端添加</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addElement</span><span class="params">(E obj)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    ensureCapacityHelper(elementCount + <span class="number">1</span>);</span><br><span class="line">    elementData[elementCount++] = obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="获得栈顶元素"><a href="#获得栈顶元素" class="headerlink" title="获得栈顶元素"></a>获得栈顶元素</h1><p>peek()方法是线程安全的，也使用到了同步关键字，通过数组下标直接定位到栈顶元素，从而获取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">peek</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>     len = size();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (len == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> EmptyStackException();</span><br><span class="line">    <span class="comment">//通过数组下标直接定位到栈顶元素    </span></span><br><span class="line">    <span class="keyword">return</span> elementAt(len - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回当前数组元素个数，这是Vector的API，在这里是栈中元素个数</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> elementCount;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Vector的API，根据下标获取值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">elementAt</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index + <span class="string">" &gt;= "</span> + elementCount);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> elementData(index);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="出栈"><a href="#出栈" class="headerlink" title="出栈"></a>出栈</h1><p>也是调用Vector的API直接点根据下标删除栈顶元素</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    E       obj;</span><br><span class="line">    <span class="keyword">int</span>     len = size();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取栈顶元素,返回用</span></span><br><span class="line">    obj = peek();</span><br><span class="line">    <span class="comment">//根据下标删除栈顶元素</span></span><br><span class="line">    removeElementAt(len - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//也是调用Vector的API直接点根据下标删除栈顶元素</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeElementAt</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index + <span class="string">" &gt;= "</span> +</span><br><span class="line">                                                 elementCount);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (index &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> j = elementCount - index - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        System.arraycopy(elementData, index + <span class="number">1</span>, elementData, index, j);</span><br><span class="line">    &#125;</span><br><span class="line">    elementCount--;</span><br><span class="line">    elementData[elementCount] = <span class="keyword">null</span>; <span class="comment">/* to let gc do its work */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="查询元素在栈中位置（下标）"><a href="#查询元素在栈中位置（下标）" class="headerlink" title="查询元素在栈中位置（下标）"></a>查询元素在栈中位置（下标）</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//从后往前找，在这里可以看做从栈顶往栈底</span></span><br><span class="line">    <span class="keyword">int</span> i = lastIndexOf(o);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (i &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> size() - i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//第二个参数是查询的开始下标</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> lastIndexOf(o, elementCount-<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(index + <span class="string">" &gt;= "</span>+ elementCount);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">            <span class="keyword">if</span> (elementData[i]==<span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> i;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">            <span class="keyword">if</span> (o.equals(elementData[i]))</span><br><span class="line">                <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面就是jdk中Stack的源码，Stack在jdk中是基于顺序存储结构的数组实现的，也可以基于双向链表的LinkedList实现，下边看看如何用LinkedList实现栈</p>
+<h1 id="linkedList实现栈"><a href="#linkedList实现栈" class="headerlink" title="linkedList实现栈"></a>linkedList实现栈</h1><h2 id="底层数据结构-1"><a href="#底层数据结构-1" class="headerlink" title="底层数据结构"></a>底层数据结构</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Initialize your data structure here. */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MyStack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   list = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="进栈-1"><a href="#进栈-1" class="headerlink" title="进栈"></a>进栈</h2><p>进栈操作中，Vector操作的是数组末端，那么linkedList也很类似，操作的是尾节点，链表末端就是栈顶</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Push element x onto stack. */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    list.add(x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    linkLast(e);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="出栈-1"><a href="#出栈-1" class="headerlink" title="出栈"></a>出栈</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> length = list.size();</span><br><span class="line">   <span class="keyword">return</span> list.remove(length);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//找到相关节点后，删除节点，解除链接关系</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    checkElementIndex(index);</span><br><span class="line">    <span class="keyword">return</span> unlink(node(index));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="获得栈顶元素-1"><a href="#获得栈顶元素-1" class="headerlink" title="获得栈顶元素"></a>获得栈顶元素</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">top</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> length = list.size();</span><br><span class="line">    <span class="keyword">return</span> list.get(length);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//通过下标找到相关节点后获取节点值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    checkElementIndex(index);</span><br><span class="line">    <span class="keyword">return</span> node(index).item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="是否是空栈"><a href="#是否是空栈" class="headerlink" title="是否是空栈"></a>是否是空栈</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">empty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> list.isEmpty();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/16/Stack源码分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Vector源码分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/16/Vector源码分析/">Vector源码分析</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/16/Vector源码分析/" class="archive-article-date">
+  	<time datetime="2019-08-16T08:23:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本来今天是想看一下Stack的源码的，但是在看到Stack的父类结构时</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Stack</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Vector</span>&lt;<span class="title">E</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我想到了我之前还没怎么看过Vector的源码，甚至乎还很少用，我之前对他的了解大概就是停留在跟ArrayList很相似，是线程安全的ArrayList，先总结下ArrayList和Vector的不同之处，然后带着结论去看源码，找原因</p>
+<h1 id="ArrayList和Vector对比："><a href="#ArrayList和Vector对比：" class="headerlink" title="ArrayList和Vector对比："></a>ArrayList和Vector对比：</h1><ul>
+<li><p>相同之处：</p>
+<ul>
+<li>都是基于数组</li>
+<li>都支持随机访问</li>
+<li>默认容量都是10</li>
+<li>都支持动态扩容</li>
+<li>都支持fail—fast机制</li>
+</ul>
+</li>
+<li><p>不同之处：</p>
+<ul>
+<li>Vector历史比ArrayList久远，Vector是jdk1.0，ArrayList是jdk1.2</li>
+<li>Vector是线程安全的，ArrayList线程不安全</li>
+<li>Vector动态扩容默认扩容两倍，ArrayList是1.5倍</li>
+</ul>
+</li>
+</ul>
+<h1 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h1><p>Vector底层是基于数组实现的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Object[] elementData;</span><br></pre></td></tr></table></figure>
+
+<p>ArrayList底层数据结构也是数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object[]</span><br></pre></td></tr></table></figure>
+
+<p>其他相关属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//数组中元素数量</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">int</span> elementCount;</span><br><span class="line"><span class="comment">//增长量</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">int</span> capacityIncrement;</span><br></pre></td></tr></table></figure>
+
+<h1 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h1><p>无参构造，数组容量默认是10</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//无参构造，数组容量默认是10</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(<span class="number">10</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ArrayList默认数组容量也是10</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//默认容量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_CAPACITY = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//构造指定容量的数组（10）</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Vcetor其他构造方法：</p>
+<p>指定容量和增长量构造</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建指定容量大小的数组，设置增长量。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">int</span> capacityIncrement)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal Capacity: "</span>+</span><br><span class="line">                                           initialCapacity);</span><br><span class="line">    <span class="comment">//构造指定容量的数组</span></span><br><span class="line">    <span class="keyword">this</span>.elementData = <span class="keyword">new</span> Object[initialCapacity];</span><br><span class="line">    <span class="comment">//设置增长量</span></span><br><span class="line">    <span class="keyword">this</span>.capacityIncrement = capacityIncrement;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>指定容量和增长量为0的构造：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(initialCapacity, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传入指定集合构造</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//转成数组，赋值</span></span><br><span class="line">    elementData = c.toArray();</span><br><span class="line">    elementCount = elementData.length;</span><br><span class="line">    <span class="comment">// c.toArray might (incorrectly) not return Object[] (see 6260652)</span></span><br><span class="line">    <span class="comment">//如果不是Object[]，要重建数组</span></span><br><span class="line">    <span class="keyword">if</span> (elementData.getClass() != Object[].class)</span><br><span class="line">        elementData = Arrays.copyOf(elementData, elementCount, Object[].class);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="扩容机制"><a href="#扩容机制" class="headerlink" title="扩容机制"></a>扩容机制</h1><p>在了解添加元素之前我们需要理清Vector的扩容机制是怎样的，其实跟ArrayList的扩容机制也很相似</p>
+<p><strong>1.计算最小容量：</strong></p>
+<p>最小容量 = 当前数组元素数量 + 1，此举的目的就是判断是否需要扩容，最小容量就是相当于成功添加了一个元素后的新的数组元素数量，如果这个新的数组元素数量大于数组长度，那么肯定需要扩容</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacityHelper</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">if</span> (minCapacity - elementData.length &gt; <span class="number">0</span>)</span><br><span class="line">        grow(minCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.传入最小容量开始扩容：</strong></p>
+<ul>
+<li>如果当前数组的增长量 &gt; 0则新数组容量 = 旧数组容量 + 增长量</li>
+<li>否则，则新数组容量 = 2 * 旧数组容量</li>
+<li>求出新数组容量后，如果新数组容量 &lt; 最小容量，那么新数组容量 = 最小容量 </li>
+<li>如果新数组容量 &gt; 最大数组容量，则新数组容量 = 整数最大值     <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//最小数组容量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_ARRAY_SIZE = Integer.MAX_VALUE - <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//扩容</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//旧的数组容量</span></span><br><span class="line">    <span class="keyword">int</span> oldCapacity = elementData.length;</span><br><span class="line">    <span class="comment">//新数组容量</span></span><br><span class="line">    <span class="comment">//如果当前数组的增长量 &gt; 0则新数组容量 = 旧数组容量 + 增长量</span></span><br><span class="line">    <span class="comment">//否则，则新数组容量 = 2 * 旧数组容量</span></span><br><span class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + ((capacityIncrement &gt; <span class="number">0</span>) ?</span><br><span class="line">                                     capacityIncrement : oldCapacity);</span><br><span class="line">    <span class="comment">//求出新数组容量后，如果新数组容量 &lt; 最小容量，那么新数组容量 = 最小容量                                  </span></span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="comment">//如果新数组容量 &gt; 最大数组容量，则新数组容量 = 整数最大值</span></span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    <span class="comment">//真正扩容，实际上就是数组的复制和移动    </span></span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//判断是取最大数组容量还是整数最大值</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">hugeCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>) <span class="comment">// overflow</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> OutOfMemoryError();</span><br><span class="line">    <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">        Integer.MAX_VALUE :</span><br><span class="line">        MAX_ARRAY_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>4.扩容实际：数组复制和移动</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T,U&gt; T[] copyOf(U[] original, <span class="keyword">int</span> newLength, Class&lt;? extends T[]&gt; newType) &#123;</span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    T[] copy = ((Object)newType == (Object)Object[].class)</span><br><span class="line">        ? (T[]) <span class="keyword">new</span> Object[newLength]</span><br><span class="line">        : (T[]) Array.newInstance(newType.getComponentType(), newLength);</span><br><span class="line">    <span class="comment">//params0：original：原数组</span></span><br><span class="line">    <span class="comment">//param1：srcPos：原数组开始位置</span></span><br><span class="line">    <span class="comment">//param2：copy：新数组</span></span><br><span class="line">    <span class="comment">//param3：destPost：新数组开始位置</span></span><br><span class="line">    <span class="comment">//param4：copyLength：要copy的数组的长度    </span></span><br><span class="line">    System.arraycopy(original, <span class="number">0</span>, copy, <span class="number">0</span>,</span><br><span class="line">                     Math.min(original.length, newLength));</span><br><span class="line">    <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ArrayList的扩容机制其实和Vector很相似，至少原理是一致的，但是在扩容大小上不一样</p>
+<p>因为ArrayList没有增长量这一概念，所以ArrayList默认扩容1.5倍</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 原来的数组容量 = 数组长度</span></span><br><span class="line">    <span class="keyword">int</span> oldCapacity = elementData.length;</span><br><span class="line">    <span class="comment">// 新的数组容量 = 原数组容量+原数组容量/2</span></span><br><span class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="comment">//判断下传进来的最小容量 （最小容量 = 当前数组元素数目 + 1）</span></span><br><span class="line">    <span class="comment">// 如果比当前新数组容量小，则使用最容量</span></span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="comment">//如果判断当前新容量是否超过最大的数组容量 MAX_ARRAY_SIZE =  Integer.MAX_VALUE - 8</span></span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    <span class="comment">//开始扩容</span></span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果判断当前新容量是否超过最大的数组容量 MAX_ARRAY_SIZE =  Integer.MAX_VALUE - 8</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">hugeCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>) <span class="comment">// overflow</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> OutOfMemoryError();</span><br><span class="line">    <span class="comment">//如果超多最大数组容量则使用Integer的最大数值，否则还是使用最大数组容量</span></span><br><span class="line">    <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">        Integer.MAX_VALUE :</span><br><span class="line">        MAX_ARRAY_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ArrayList扩容流程：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190719181922137.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTkyMjI4OQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h1 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h1><p><strong>数组尾部添加指定元素</strong></p>
+<p>可以看到添加方法上带有synchronized同步关键字，保证了在添加元素时的线程安全，但是也会带来获取锁和释放锁的效率问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addElement</span><span class="params">(E obj)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="comment">//判断是否需要扩容</span></span><br><span class="line">    ensureCapacityHelper(elementCount + <span class="number">1</span>);</span><br><span class="line">    <span class="comment">//直接根据下标添加</span></span><br><span class="line">    elementData[elementCount++] = obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>指定位置添加指定元素</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">insertElementAt</span><span class="params">(E obj, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">if</span> (index &gt; elementCount) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index</span><br><span class="line">                                                 + <span class="string">" &gt; "</span> + elementCount);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//判断是否需要扩容</span></span><br><span class="line">    ensureCapacityHelper(elementCount + <span class="number">1</span>);</span><br><span class="line">    <span class="comment">//数组移动和复制，腾出index位置 index后的元素向后移动一位</span></span><br><span class="line">    System.arraycopy(elementData, index, elementData, index + <span class="number">1</span>, elementCount - index);</span><br><span class="line">    <span class="comment">//下标添加</span></span><br><span class="line">    elementData[index] = obj;</span><br><span class="line">    <span class="comment">//元素数量+1</span></span><br><span class="line">    elementCount++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>添加指定集合</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    Object[] a = c.toArray();</span><br><span class="line">    <span class="keyword">int</span> numNew = a.length;</span><br><span class="line">    ensureCapacityHelper(elementCount + numNew);</span><br><span class="line">     <span class="comment">//扩容，复制到数组后面</span></span><br><span class="line">    System.arraycopy(a, <span class="number">0</span>, elementData, elementCount, numNew);</span><br><span class="line">    elementCount += numNew;</span><br><span class="line">    <span class="keyword">return</span> numNew != <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h1><p><strong>删除指定下标元素</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</span><br><span class="line">    <span class="comment">//原来该下标对应的元素值    </span></span><br><span class="line">    E oldValue = elementData(index);</span><br><span class="line">    <span class="comment">//index后面元素的数量</span></span><br><span class="line">    <span class="keyword">int</span> numMoved = elementCount - index - <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//如果该元素不是最后一个元素</span></span><br><span class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)</span><br><span class="line">        <span class="comment">//该元素后面的元素向前移动一位，覆盖删除</span></span><br><span class="line">        System.arraycopy(elementData, index+<span class="number">1</span>, elementData, index,</span><br><span class="line">                         numMoved);</span><br><span class="line">    <span class="comment">//数组最后多余的一位为null，gc                     </span></span><br><span class="line">    elementData[--elementCount] = <span class="keyword">null</span>; <span class="comment">// Let gc do its work</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> oldValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//和上边方法其实思路是一样的</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeElementAt</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="comment">//检查</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index + <span class="string">" &gt;= "</span> +</span><br><span class="line">                                                 elementCount);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (index &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> j = elementCount - index - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">         <span class="comment">//该元素后面的元素向前移动一位，覆盖删除</span></span><br><span class="line">        System.arraycopy(elementData, index + <span class="number">1</span>, elementData, index, j);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//数组最后多余的一位为null，gc    </span></span><br><span class="line">    elementCount--;</span><br><span class="line">    elementData[elementCount] = <span class="keyword">null</span>; <span class="comment">/* to let gc do its work */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除指定元素</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">removeElement</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="comment">//找到该元素下标</span></span><br><span class="line">    <span class="keyword">int</span> i = indexOf(obj);</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">//下标正确则根据下标删除</span></span><br><span class="line">        removeElementAt(i);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除所有元素</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeAllElements</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="comment">//循环删除每一个元素，gc</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; elementCount; i++)</span><br><span class="line">        elementData[i] = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    elementCount = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除指定范围的元素</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeRange</span><span class="params">(<span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="comment">//原理还是数组的移动，将toIndex后的元素向前移动 toIndex - fromIndex</span></span><br><span class="line">    <span class="keyword">int</span> numMoved = elementCount - toIndex;</span><br><span class="line">    System.arraycopy(elementData, toIndex, elementData, fromIndex,</span><br><span class="line">                     numMoved);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Let gc do its work</span></span><br><span class="line">    <span class="keyword">int</span> newElementCount = elementCount - (toIndex-fromIndex);</span><br><span class="line">    <span class="keyword">while</span> (elementCount != newElementCount)</span><br><span class="line">        elementData[--elementCount] = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h1><p><strong>从指定下标开始找到指定元素第一次出现的下标</strong></p>
+<p>从前往后找</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object o, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index ; i &lt; elementCount ; i++)</span><br><span class="line">            <span class="keyword">if</span> (elementData[i]==<span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> i;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index ; i &lt; elementCount ; i++)</span><br><span class="line">            <span class="keyword">if</span> (o.equals(elementData[i]))</span><br><span class="line">                <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从后往前找</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(index + <span class="string">" &gt;= "</span>+ elementCount);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">            <span class="keyword">if</span> (elementData[i]==<span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> i;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">            <span class="keyword">if</span> (o.equals(elementData[i]))</span><br><span class="line">                <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>返回指定下标的元素</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">elementData</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (E) elementData[index];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> elementData(index);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>是否包含指定元素</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//看没有该下标</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> indexOf(o, <span class="number">0</span>) &gt;= <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h1><p>迭代器和ArrayList相比是差不多的，包括实现也是，可以参考<a href="https://blog.csdn.net/weixin_41922289/article/details/96414531" target="_blank" rel="noopener">ArrayList源码分析</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构和算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/16/Vector源码分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-栈的常见算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1132,301 +1410,9 @@
 
 
   
-    <article id="post-java8-stream" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/06/java8-stream/">java8 stream</a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/06/java8-stream/" class="archive-article-date">
-  	<time datetime="2019-08-06T14:05:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="一，stream概述"><a href="#一，stream概述" class="headerlink" title="一，stream概述"></a>一，stream概述</h1><p><strong>什么是stream？</strong></p>
-<p>这里的stream不同于IO中的inputStream和OutputStream，stream位于java.util.stream中，是一组支持串行并行聚合操作的元素，也可以理解成集合或者迭代器的增强版</p>
-<p><strong>特征：</strong></p>
-<ul>
-<li><p>单次处理，一次处理结束后，当前stream就关闭了</p>
-</li>
-<li><p>支持并行操作</p>
-</li>
-</ul>
-<h1 id="二，使用"><a href="#二，使用" class="headerlink" title="二，使用"></a>二，使用</h1><ul>
-<li><p><strong>allMatch和anyMatch</strong></p>
-<p>  allMatch：检查 Stream 中的所有元素，全部都通过检测则返回 true，否则 false</p>
-<p>  anyMatch：检查 Stream 中的所有元素，至少有一个通过检测则返回 true，否则 false </p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//allMatch</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().allMatch(n-&gt;n.getClass() == Integer.class));</span><br><span class="line"><span class="comment">//anyMatch</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().anyMatch(n-&gt;n&gt;<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>max，min和sort</strong></p>
-<p>  max：返回stream中的最大值</p>
-<p>  min：返回stream中的最小值</p>
-<p>  sort：对stream中的元素排序</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//遍历</span></span><br><span class="line">list.stream().forEach(a -&gt; System.out.println(a));</span><br><span class="line"><span class="comment">//max</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().max((a,b)-&gt;a-b).get());</span><br><span class="line"><span class="comment">//min</span></span><br><span class="line">System.out.println(<span class="string">"-----&gt;"</span>+list.stream().min((a,b)-&gt;a-b).get());</span><br><span class="line"><span class="comment">//sort</span></span><br><span class="line">list.stream().sorted((a,b)-&gt;a-b).forEach(a-&gt;System.out.println(a));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>filter和map</strong></p>
-<p>  filter：筛选 Stream 元素，符合条件的留下并组成一个新的 Stream 。</p>
-<p>  map：依次对 Stream 中的元素进行指定的函数操作，并将按顺序将函数操作的返回值组合到一个新的 Stream 中。</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//筛选filter</span></span><br><span class="line">list.stream().filter(n-&gt;n&gt;<span class="number">6</span>).forEach(n-&gt;System.out.println(n));</span><br><span class="line"><span class="comment">//map</span></span><br><span class="line">list.stream().map(n-&gt;n+<span class="number">1</span>).forEach(n-&gt;System.out.println(n));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>distinct和collect</strong></p>
-<p>  distinct：去重</p>
-<p>  collect：可以做collectors中的一些操作，如：连接，转list，分组等</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//collect</span></span><br><span class="line">Stream.of(<span class="string">"1"</span>,<span class="string">"2"</span>,<span class="string">"3"</span>).collect(Collectors.toList()).forEach(n-&gt;System.out.println(n));</span><br><span class="line"><span class="comment">//去重distinct</span></span><br><span class="line">Stream.of(<span class="string">"2"</span>,<span class="string">"2"</span>,<span class="string">"2"</span>).distinct().forEach(n-&gt;System.out.println(n));</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>还有很多详细的用法，没有举出，可以参考：</p>
-<p><a href="https://buzheng.org/post/20160226-java-stream-api-notes/" target="_blank" rel="noopener">stream api</a></p>
-<h1 id="三-Optional类"><a href="#三-Optional类" class="headerlink" title="三,Optional类"></a>三,Optional类</h1><p>Optional类是java8新增的一个类，用以解决程序中常见的NullPointerException异常问题</p>
-<p>NullPointerException是我们很经常遇到的一个问题，大多人遇到这个异常的时候，可能会在出现异常的代码处添加if-else的判断，类似下边代码；</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindUserToRole</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">        String roleId = user.getRoleId();</span><br><span class="line">        <span class="keyword">if</span> (roleId != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Role role = roleDao.findOne(roleId);</span><br><span class="line">            <span class="keyword">if</span> (role != <span class="keyword">null</span>) &#123;</span><br><span class="line">                role.setUserId(user.getUserId());</span><br><span class="line">                roleDao.save(role);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但是，这样手动处理null，如果数据增多，那么，相应的判断也会增多，业务逻辑就会被这大量的if判断淹没，对于代码维护和可读性是很打击的</p>
-<p>在java8推出的Optional类就是用以避免null值引发的种种问题</p>
-<h2 id="1-概况："><a href="#1-概况：" class="headerlink" title="1.概况："></a>1.概况：</h2><p>java.util.Optional<t>类是一个封装了Optional值的容器对象，Optional值可以为null，如果值存在，调用isPresent()方法返回true，调用get()方法可以获取值。</t></p>
-<h2 id="2-创建Optional对象"><a href="#2-创建Optional对象" class="headerlink" title="2.创建Optional对象"></a>2.创建Optional对象</h2><p>Optional类提供类三个方法用于实例化一个Optional对象，它们分别为empty()、of()、ofNullable()，这三个方法都是静态方法，可以直接调用。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> T value;<span class="comment">//Optional维护的值</span></span><br></pre></td></tr></table></figure>
-
-<p>默认构造：(主要处理null值)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Optional</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.value = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>有参构造：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Optional</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.value = Objects.requireNonNull(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>empty()方法用于创建一个没有值的Optional对象：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Optional&lt;T&gt; <span class="title">empty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    Optional&lt;T&gt; t = (Optional&lt;T&gt;) EMPTY;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>empty()方法创建的对象没有值，如果对emptyOpt变量调用isPresent()方法会返回false，调用get()方法抛出NullPointerException异常。</p>
-<p>of()方法使用一个非空的值创建Optional对象：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Optional&lt;T&gt; <span class="title">of</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Optional&lt;&gt;(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-接收值"><a href="#3-接收值" class="headerlink" title="3.接收值"></a>3.接收值</h2><p>ofNullable()方法接收一个可以为null的值：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;String&gt; nullableOpt = Optional.ofNullable(str);</span><br></pre></td></tr></table></figure>
-
-<p>如果str的值为null，得到的nullableOpt是一个没有值的Optional对象。<br>源码分析：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Optional&lt;T&gt; <span class="title">ofNullable</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//根据值是否为null，调用相应构造方法构造相应Optional对象</span></span><br><span class="line">    <span class="keyword">return</span> value == <span class="keyword">null</span> ? empty() : of(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-获取Optional对象中的值"><a href="#4-获取Optional对象中的值" class="headerlink" title="4.获取Optional对象中的值"></a>4.获取Optional对象中的值</h3><p>如果我们要获取User对象中的roleId属性值，常见的方式是直接获取：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String roleId = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">    roleId = user.getRoleId();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>复制代码使用Optional中提供的map()方法可以以更简单的方式实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;User&gt; userOpt = Optional.ofNullable(user);</span><br><span class="line">Optional&lt;String&gt; roleIdOpt = userOpt.map(User::getRoleId);</span><br></pre></td></tr></table></figure>
-
-<p>Optional类还包含其他方法用于获取值，这些方法分别为：</p>
-<ul>
-<li>orElse()：如果有值就返回，否则返回一个给定的值作为默认值；</li>
-<li>orElseGet()：与orElse()方法作用类似，区别在于生成默认值的方式不同。该方法接受一个Supplier&lt;? extends T&gt;函数式接口参数，用于生成默认值；</li>
-<li>orElseThrow()：与前面介绍的get()方法类似，当值为null时调用这两个方法都会抛出NullPointerException异常，区别在于该方法可以指定抛出的异常类型。</li>
-</ul>
-<h3 id="5-简单应用"><a href="#5-简单应用" class="headerlink" title="5.简单应用"></a>5.简单应用</h3><p><strong>简化if-else</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">User user = ...</span><br><span class="line"><span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">    String userName = user.getUserName();</span><br><span class="line">    <span class="keyword">if</span> (userName != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> userName.toUpperCase();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>简化成：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">User user = ...</span><br><span class="line">Optional&lt;User&gt; userOpt = Optional.ofNullable(user);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> userOpt.map(User::getUserName)</span><br><span class="line">            .map(String::toUpperCase)</span><br><span class="line">            .orElse(<span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
-
-<p>注意点：</p>
-<ul>
-<li><p>尽量避免在程序中直接调用Optional对象的get()和isPresent()方法，直接调用get()方法是很危险的做法，如果Optional的值为空，那么毫无疑问会抛出NullPointerException异常，而为了调用get()方法而使用isPresent()方法作为空值检查，这种做法与传统的用if语句块做空值检查没有任何区别。</p>
-</li>
-<li><p>避免使用Optional类型声明实体类属性，Optional没有实现Serializable序列化接口 </p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/06/java8-stream/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-java8新特性-lambda表达式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/06/java8新特性-lambda表达式/">java8新特性 lambda表达式</a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/06/java8新特性-lambda表达式/" class="archive-article-date">
-  	<time datetime="2019-08-06T10:29:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>lambda表达式是java8新引入的一个新的新特性，类似于js中的闭包，目的就是提供一个类似函数式编程的语法来简化我们的编码</p>
-<h2 id="一，lambda基本语法"><a href="#一，lambda基本语法" class="headerlink" title="一，lambda基本语法"></a>一，lambda基本语法</h2><p>其实lambda表达式跟原来写一个方法思路是很相似的，只是，lambda表达式可以使我们原来的方法简单化编码，更加清晰明了</p>
-<p>基本结构：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//(方法参数) -&gt; 方法体</span></span><br><span class="line">(args)-&gt;body</span><br></pre></td></tr></table></figure>
-
-<p>常见的基本写法可以有：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 1. 参数类型可推导时，不需要指定类型，如 (a) -&gt; System.out.println(a)</span></span><br><span class="line"><span class="comment">* 2. 当只有一个参数且类型可推导时，不强制写 (), 如 a -&gt; System.out.println(a)</span></span><br><span class="line"><span class="comment">* 3. 参数指定类型时，必须有括号，如 (int a) -&gt; System.out.println(a)</span></span><br><span class="line"><span class="comment">* 4. 参数可以为空，如 () -&gt; System.out.println(“hello”)</span></span><br><span class="line"><span class="comment">* 5. body 需要用 &#123;&#125; 包含语句，当只有一条语句时 &#123;&#125; 可省略</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line">(a) -&gt; a * a</span><br><span class="line">(<span class="keyword">int</span> a, <span class="keyword">int</span> b) -&gt; a + b</span><br><span class="line">(a, b) -&gt; &#123;<span class="keyword">return</span> a - b;&#125;</span><br><span class="line">() -&gt; System.out.println(Thread.currentThread().getId())</span><br></pre></td></tr></table></figure>
-
-<h2 id="二，函数式接口"><a href="#二，函数式接口" class="headerlink" title="二，函数式接口"></a>二，函数式接口</h2><p>java中的lambda表达式是以函数式接口为基础的</p>
-<p><strong>什么是函数式接口？</strong></p>
-<p>函数式接口（FunctionalInterface)就是只有一个方法的接口，这类接口的目的就是进行单一操作，这些函数式接口一般都带有注解@FunctionalInterface </p>
-<p>EG:</p>
-<p>平时我们创建线程使用的Runnable接口就是一个函数式接口</p>
-<p>原始创建线程的方式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"没有使用lambda表达式"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接下来我们使用lambda表达式创建线程：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Thread(()-&gt;System.out.println(<span class="string">"使用lambda表达式创建线程"</span>)).start();</span><br></pre></td></tr></table></figure>
-
-<p>是不是更加简单清晰了</p>
-<p>注意看Thread的参数，原来我们需要传一个Runable实现类或者以匿名内部类的方法编写，但是现在，我们可以使用lambda表达式来作为函数参数，由此可见，Lambda 允许把函数作为一个方法的参数（函数作为参数传递进方法中）</p>
-<p>之前我们写过一个按jsonArray某字段进行排序的一个方法，但是这个方法中的比较器是使用传统方式编写的，现在我们来用lambda试着简化一下：</p>
-<p>原函数：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对json数组排序，</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> jsonArr</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> sortKey 排序关键字</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> is_desc is_desc-false升序列  is_desc-true降序 (排序字段为字符串)</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">jsonArraySort</span><span class="params">(JSONArray jsonArr, String sortKey, <span class="keyword">boolean</span> is_desc)</span> </span>&#123;</span><br><span class="line">    JSONArray sortedJsonArray = <span class="keyword">new</span> JSONArray();</span><br><span class="line">    List&lt;JSONObject&gt; jsonValues = <span class="keyword">new</span> ArrayList&lt;JSONObject&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; jsonArr.size(); i++) &#123;</span><br><span class="line">        jsonValues.add(JSONObject.parseObject(String.valueOf(jsonArr.getJSONObject(i))));</span><br><span class="line">    &#125;</span><br><span class="line">    Collections.sort(jsonValues, <span class="keyword">new</span> Comparator&lt;JSONObject&gt;() &#123;</span><br><span class="line">        <span class="keyword">private</span>  <span class="keyword">final</span> String KEY_NAME = sortKey;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(JSONObject a, JSONObject b)</span> </span>&#123;</span><br><span class="line">            String valA = <span class="keyword">new</span> String();</span><br><span class="line">            String valB = <span class="keyword">new</span> String();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                valA = a.getString(KEY_NAME);</span><br><span class="line">                valB = b.getString(KEY_NAME);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (JSONException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (is_desc)&#123;</span><br><span class="line">                <span class="keyword">return</span> -valA.compareTo(valB);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> -valB.compareTo(valA);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; jsonArr.size(); i++) &#123;</span><br><span class="line">        sortedJsonArray.add(jsonValues.get(i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sortedJsonArray.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用lambda表达式简化代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对json数组排序，</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> jsonArr</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> sortKey 排序关键字</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> is_desc is_desc-false升序列  is_desc-true降序 (排序字段为字符串)</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">jsonArraySort</span><span class="params">(JSONArray jsonArr, String sortKey, <span class="keyword">boolean</span> is_desc)</span> </span>&#123;</span><br><span class="line">    JSONArray sortedJsonArray = <span class="keyword">new</span> JSONArray();</span><br><span class="line">    List&lt;JSONObject&gt; jsonValues = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    jsonArr.forEach(a-&gt;jsonValues.add(JSONObject.parseObject(String.valueOf(a))));</span><br><span class="line">    Collections.sort(jsonValues,(JSONObject a, JSONObject b)-&gt;&#123;</span><br><span class="line">        <span class="keyword">final</span> String KEY_NAME = sortKey;</span><br><span class="line">        String valA = a.getString(KEY_NAME);</span><br><span class="line">        String valB = b.getString(KEY_NAME);</span><br><span class="line">        <span class="keyword">if</span>(is_desc)&#123;</span><br><span class="line">            <span class="keyword">return</span> -valA.compareTo(valB);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> valA.compareTo(valB);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    jsonArr.forEach(a -&gt; sortedJsonArray.add(a));</span><br><span class="line">    <span class="keyword">return</span> sortedJsonArray.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>JDK中的函数式接口<br>为了现有的类库能够直接使用 Lambda 表达式，Java 8 以前存在一些接口已经被标注为函数式接口的：</p>
-<ul>
-<li>java.lang.Runnable</li>
-<li>java.util.Comparator</li>
-<li>java.util.concurrent.Callable</li>
-<li>java.io.FileFilter</li>
-<li>java.security.PrivilegedAction</li>
-<li>java.beans.PropertyChangeListener</li>
-</ul>
-<p>Java 8 中更是新增加了一个包 java.util.function，带来了常用的函数式接口：</p>
-<ul>
-<li>Function&lt;T, R&gt; - 函数：输入 T 输出 R</li>
-<li>BiFunction&lt;T, U, R&gt; - 函数：输入 T 和 U 输出 R 对象</li>
-<li>Predicate<t> - 断言/判断：输入 T 输出 boolean</t></li>
-<li>BiPredicate&lt;T, U&gt; - 断言/判断：输入 T 和 U 输出 boolean</li>
-<li>Supplier<t> - 生产者：无输入，输出 T</t></li>
-<li>Consumer<t> - 消费者：输入 T，无输出</t></li>
-<li>BiConsumer&lt;T, U&gt; - 消费者：输入 T 和 U 无输出</li>
-<li>UnaryOperator<t> - 单元运算：输入 T 输出 T</t></li>
-<li>BinaryOperator<t> - 二元运算：输入 T 和 T 输出 T</t></li>
-</ul>
-<p>另外还对基本类型的处理增加了更加具体的函数是接口，包括：BooleanSupplier, DoubleBinaryOperator, DoubleConsumer, DoubleFunction<r>, DoublePredicate, DoubleSupplier, DoubleToIntFunction, DoubleToLongFunction, DoubleUnaryOperator, IntBinaryOperator, IntConsumer, IntFunction<r>, IntPredicate, IntSupplier, IntToDoubleFunction, IntToLongFunction, IntUnaryOperator, LongBinaryOperator, LongConsumer, LongFunction<r>, LongPredicate, LongSupplier, LongToDoubleFunction, LongToIntFunction, LongUnaryOperator, ToDoubleBiFunction&lt;T, U&gt;, ToDoubleFunction<t>, ToIntBiFunction&lt;T, U&gt;, ToIntFunction<t>, ToLongBiFunction&lt;T, U&gt;, ToLongFunction<t> 。结合上面的函数式接口，对这些基本类型的函数式接口通过类名就能一眼看出接口的作用</t></t></t></r></r></r></p>
-<p>纵观上述函数式接口，其实可以分为四大类：</p>
-<ul>
-<li>消费型（有参数，无返回值）</li>
-<li>生成型（无参数，有返回值）</li>
-<li>一般型（参数，返回值都有）</li>
-<li>断言型（输出布尔型）</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/06/java8新特性-lambda表达式/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 
@@ -1570,10 +1556,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">排序算法</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
              
@@ -1590,6 +1572,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">春招</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">项目总结</a>
               </li>
              
@@ -1598,7 +1584,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">春招</a>
+                <a href="javascript:void(0)" class="js-tag color5">springboot专题复习</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1611,6 +1597,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">项目</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">排序算法</a>
               </li>
             
             <div class="clearfix"></div>
